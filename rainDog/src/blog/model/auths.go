@@ -1,6 +1,7 @@
 package model
 
 import (
+	"blog/utils/helper"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -26,32 +27,33 @@ type Users struct {
 	password string
 }
 
-func Login(info LoginInfo) (Users, bool) {
-	db, err := gorm.Open("mysql", "root:root@/rain_dog?charset=utf8&parseTime=True&loc=Local")
+func Login(info LoginInfo) (user Users, status bool) {
+	db, err := helper.Db("rain_dog")
 
 	if err != nil {
 		fmt.Println(err)
+		return user, false
 	}
 
-	var user Users
-	result := db.Where("username = ? and password = ?", info.Username, info.Password).First(&user)
+	result := db.Table("user").
+		Where("username = ? and password = ?", info.Username, info.Password).
+		First(&user)
 
 	if result.Error != nil {
 		fmt.Println(result.Error)
 		return user, false
 	}
 
-	fmt.Println(user)
-
 	defer db.Close()
 	return user, true
 }
 
-func Register(info RegisterInfo) bool {
-	db, err := gorm.Open("mysql", "root:root@(192.168.3.9:9003)/rain_dog?charset=utf8&parseTime=True&loc=Local")
+func Register(info RegisterInfo) (status bool) {
+	db, err := helper.Db("rain_dog")
 
 	if err != nil {
 		fmt.Println(err)
+		return false
 	}
 
 	id := db.Table("user").Create(&info)

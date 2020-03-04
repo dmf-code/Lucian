@@ -24,6 +24,7 @@ func LoginApi(c *gin.Context) {
 	fmt.Println(user)
 	if !status {
 		helper.Fail(c, 200, "failed")
+		return
 	}
 	helper.Success(c, 200, gin.H{"user": user})
 }
