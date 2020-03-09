@@ -32,3 +32,9 @@ func Db(dbName string) (db *gorm.DB, err error) {
 	return
 }
 
+func Env(str string) (res string) {
+	res = os.Getenv(str)
+	return
+}
+
+

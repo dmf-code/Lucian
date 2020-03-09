@@ -1,10 +1,10 @@
-package model
+package auth
 
 import (
 	"blog/utils/helper"
+	"blog/utils/model"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
 )
 
 type RegisterInfo struct {
@@ -22,7 +22,7 @@ type LoginInfo struct {
 }
 
 type Users struct {
-	gorm.Model
+	model.BaseModel
 	Username string
 	password string
 }

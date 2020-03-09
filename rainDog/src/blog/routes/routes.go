@@ -9,7 +9,6 @@ import (
 func Groups(r *gin.Engine) *gin.Engine {
 	r.POST("/login", apis.LoginApi)
 	r.POST("/register", apis.RegisterApi)
-
 	r.POST("/getCaptcha", captcha.GenerateCaptchaHandler)
 	//r.POST("/verifyCaptcha", captcha.VerifyCaptchaHandler)
 	return r

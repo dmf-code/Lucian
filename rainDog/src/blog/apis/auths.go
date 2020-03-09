@@ -1,9 +1,10 @@
 package apis
 
 import (
-	"blog/model"
+	"blog/model/auth"
 	"blog/utils/captcha"
 	"blog/utils/helper"
+	"blog/utils/token"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -13,24 +14,27 @@ type LoginInfo struct {
 }
 
 func LoginApi(c *gin.Context) {
-	var loginInfo model.LoginInfo
+	var loginInfo auth.LoginInfo
 	err := c.BindJSON(&loginInfo)
 	if err != nil {
 		fmt.Println(err)
 		helper.Fail(c, 200,  "failed")
 	}
-	user, status := model.Login(loginInfo)
+	user, status := auth.Login(loginInfo)
 	fmt.Println(status)
 	fmt.Println(user)
+	newToken, _ := token.CreateToken([]byte(helper.Env("SECRET_KEY")), c.GetHeader("Origin"), user.ID, true)
+
 	if !status {
 		helper.Fail(c, 200, "failed")
 		return
 	}
-	helper.Success(c, 200, gin.H{"user": user})
+	token.ParseToken(newToken, []byte(helper.Env("SECRET_KEY")))
+	helper.Success(c, 200, gin.H{"user": user, "token": newToken})
 }
 
 func RegisterApi(c *gin.Context) {
-	var registerInfo model.RegisterInfo
+	var registerInfo auth.RegisterInfo
 	err := c.BindJSON(&registerInfo)
 
 	if err != nil {
@@ -39,7 +43,7 @@ func RegisterApi(c *gin.Context) {
 		if captcha.VerifyCaptchaHandler(registerInfo.Id, registerInfo.VerifyValue) == false {
 			helper.Fail(c, 200,  "验证码不正确")
 		}
-		model.Register(registerInfo)
+		auth.Register(registerInfo)
 	}
 	helper.Success(c, 200, gin.H{})
 }
