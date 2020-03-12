@@ -43,4 +43,18 @@ func Backend(r *gin.RouterGroup) {
 		fmt.Println(fields)
 		helper.Success(context, 200, gin.H{"list": fields})
 	})
+	
+	r.DELETE("/category/:id", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var field category.DeleteField
+		field.Id = context.Param("id")
+		if err := db.Table("category").Delete(&field).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+		helper.Success(context, 200, gin.H{"msg": "success"})
+	})
+
+
+
 }

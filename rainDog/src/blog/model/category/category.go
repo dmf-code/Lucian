@@ -19,6 +19,10 @@ type GetField struct {
 	Num string `json:"num"`
 }
 
+type DeleteField struct {
+	Id string `json:"id"`
+}
+
 type RestfulFunc func(*gin.Context)
 
 func RestfulHandle(f RestfulFunc) {
