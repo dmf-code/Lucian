@@ -1,9 +1,5 @@
 package category
 
-import (
-	"github.com/gin-gonic/gin"
-)
-
 type PostField struct {
 	Name string `json:"name"`
 }
@@ -23,8 +19,3 @@ type DeleteField struct {
 	Id string `json:"id"`
 }
 
-type RestfulFunc func(*gin.Context)
-
-func RestfulHandle(f RestfulFunc) {
-
-}

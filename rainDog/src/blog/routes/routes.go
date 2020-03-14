@@ -13,3 +13,7 @@ func Groups(r *gin.Engine) *gin.Engine {
 	//r.POST("/verifyCaptcha", captcha.VerifyCaptchaHandler)
 	return r
 }
+
+func RestfulHandle(r *gin.Engine)  {
+
+}

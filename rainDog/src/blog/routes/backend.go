@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"blog/model/article"
 	"blog/model/category"
 	"blog/model/tag"
 	"blog/utils/helper"
@@ -9,6 +10,14 @@ import (
 )
 
 func Backend(r *gin.RouterGroup) {
+	categoryGroup(r)
+
+	tagGroup(r)
+	
+	articleGroup(r)
+}
+
+func categoryGroup(r *gin.RouterGroup) {
 	r.POST("/category", func(context *gin.Context) {
 		db, _ := helper.Db("rain_dog")
 		var field category.PostField
@@ -44,7 +53,7 @@ func Backend(r *gin.RouterGroup) {
 		fmt.Println(fields)
 		helper.Success(context, 200, gin.H{"list": fields})
 	})
-	
+
 	r.DELETE("/category/:id", func(context *gin.Context) {
 		db, _ := helper.Db("rain_dog")
 		var field category.DeleteField
@@ -55,7 +64,9 @@ func Backend(r *gin.RouterGroup) {
 		}
 		helper.Success(context, 200, gin.H{"msg": "success"})
 	})
+}
 
+func tagGroup(r *gin.RouterGroup) {
 	r.POST("/tag", func(context *gin.Context) {
 		db, _ := helper.Db("rain_dog")
 		var field tag.PostField
@@ -102,5 +113,34 @@ func Backend(r *gin.RouterGroup) {
 		}
 		helper.Success(context, 200, gin.H{"msg": "success"})
 	})
+}
 
+func articleGroup(r *gin.RouterGroup) {
+	r.POST("/article", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var field article.PostField
+
+		fmt.Println(field)
+		context.BindJSON(&field)
+		fmt.Println(field)
+
+		if err := db.Table("article").Create(&field).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+
+		helper.Success(context, 200, gin.H{"msg": "success"})
+	})
+	
+	r.PUT("/article/:id", func(context *gin.Context) {
+		
+	})
+	
+	r.GET("/article", func(context *gin.Context) {
+		
+	})
+	
+	r.DELETE("/article/:id", func(context *gin.Context) {
+		
+	})
 }
