@@ -36,11 +36,13 @@ func LoginApi(c *gin.Context) {
 func RegisterApi(c *gin.Context) {
 	var registerInfo auth.RegisterInfo
 	err := c.BindJSON(&registerInfo)
+	Id := c.Param("Id")
+	VerifyValue := c.Param("VerifyValue")
 
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		if captcha.VerifyCaptchaHandler(registerInfo.Id, registerInfo.VerifyValue) == false {
+		if captcha.VerifyCaptchaHandler(Id, VerifyValue) == false {
 			helper.Fail(c, 200,  "验证码不正确")
 		}
 		auth.Register(registerInfo)

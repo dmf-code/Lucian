@@ -18,6 +18,7 @@ func AccessTokenMiddleware() gin.HandlerFunc{
 			var user auth.Users
 			db, _ := helper.Db("rain_dog")
 			uid := token.GetIdFromClaims("uid", data)
+			fmt.Println(data)
 			db.Table("user").Where("id = ?", uid).First(&user)
 			fmt.Println(user)
 			c.Next()

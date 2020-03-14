@@ -10,15 +10,11 @@ import (
 type RegisterInfo struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Id string `json:"id"`
-	VerifyValue string `json:"verify_value"`
 }
 
 type LoginInfo struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Id string `json:"id"`
-	VerifyValue string `json:"verify_value"`
 }
 
 type Users struct {
@@ -44,7 +40,6 @@ func Login(info LoginInfo) (user Users, status bool) {
 		return user, false
 	}
 
-	defer db.Close()
 	return user, true
 }
 
@@ -56,10 +51,9 @@ func Register(info RegisterInfo) (status bool) {
 		return false
 	}
 
-	id := db.Table("user").Create(&info)
+	if err := db.Table("user").Create(&info).Error; err != nil {
+		return false
+	}
 
-	fmt.Println(id)
-
-	defer db.Close()
 	return true
 }

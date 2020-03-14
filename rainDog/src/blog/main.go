@@ -25,15 +25,16 @@ func setupRouter() *gin.Engine {
 		})
 	}
 
+
 	backend := r.Group("/backend")
+	backend.Use(middleware.AccessTokenMiddleware())
+
 	{
 		backend.GET("ping", func(context *gin.Context) {
 			helper.Success(context, 200, gin.H{"msg": "pong"})
 		})
 		routes.Backend(backend)
 	}
-
-	backend.Use(middleware.AccessTokenMiddleware())
 
 	return r
 }

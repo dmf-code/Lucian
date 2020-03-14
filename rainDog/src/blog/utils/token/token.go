@@ -3,7 +3,9 @@ package token
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"os"
 	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -20,9 +22,10 @@ type jwtCustomClaims struct {
  * SecretKey 是一个 const 常量
  */
 func CreateToken(SecretKey []byte, issuer string, Uid uint, isAdmin bool) (tokenString string, err error) {
+	var tokenExpireTime, _ = strconv.ParseInt(os.Getenv("TOKEN_EXPIRE_TIME"), 10, 64)
 	claims := &jwtCustomClaims{
 		jwt.StandardClaims{
-			ExpiresAt: int64(time.Now().Add(time.Hour * 72).Unix()),
+			ExpiresAt: int64(time.Now().Add(time.Hour * time.Duration(tokenExpireTime)).Unix()),
 			Issuer:    issuer,
 		},
 		Uid,
