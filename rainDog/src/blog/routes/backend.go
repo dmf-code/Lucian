@@ -2,6 +2,7 @@ package routes
 
 import (
 	"blog/model/category"
+	"blog/model/tag"
 	"blog/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -55,6 +56,51 @@ func Backend(r *gin.RouterGroup) {
 		helper.Success(context, 200, gin.H{"msg": "success"})
 	})
 
+	r.POST("/tag", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var field tag.PostField
+		_ = context.BindJSON(&field)
+		if err := db.Table("tag").Create(&field).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+		helper.Success(context, 200, gin.H{"msg": "success"})
+	})
 
+	r.PUT("/tag/:id/:name", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var putField tag.PutField
+		putField.Id = context.Param("id")
+		putField.Name = context.Param("name")
+		fmt.Println(putField)
+		if err := db.Table("tag").Model(&putField).Update("name", putField.Name).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+
+		helper.Success(context, 200, gin.H{"msg": "success"})
+	})
+
+	r.GET("/tag", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var fields []tag.GetField
+		if err := db.Table("tag").Find(&fields).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+		fmt.Println(fields)
+		helper.Success(context, 200, gin.H{"list": fields})
+	})
+
+	r.DELETE("/tag/:id", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var field tag.DeleteField
+		field.Id = context.Param("id")
+		if err := db.Table("tag").Delete(&field).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+		helper.Success(context, 200, gin.H{"msg": "success"})
+	})
 
 }
