@@ -119,8 +119,7 @@ func articleGroup(r *gin.RouterGroup) {
 	r.POST("/article", func(context *gin.Context) {
 		db, _ := helper.Db("rain_dog")
 		var field article.PostField
-
-		fmt.Println(field)
+		fmt.Println(context.PostForm("mdCode"))
 		context.BindJSON(&field)
 		fmt.Println(field)
 
