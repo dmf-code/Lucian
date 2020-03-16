@@ -132,7 +132,17 @@ func articleGroup(r *gin.RouterGroup) {
 	})
 	
 	r.PUT("/article/:id", func(context *gin.Context) {
-		
+		db, _ := helper.Db("rain_dog")
+		var filed article.PutField
+		context.BindJSON(&filed)
+		filed.Id = context.Param("id")
+		fmt.Println(filed)
+		if err := db.Table("article").Model(&filed).Updates(filed).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+
+		helper.Success(context, 200, gin.H{"msg": "更新成功"})
 	})
 	
 	r.GET("/article", func(context *gin.Context) {
@@ -147,6 +157,14 @@ func articleGroup(r *gin.RouterGroup) {
 	})
 	
 	r.DELETE("/article/:id", func(context *gin.Context) {
-		
+		db, _ := helper.Db("rain_dog")
+		var field article.DeleteField
+		field.Id = context.Param("id")
+		if err := db.Table("article").Delete(&field).Error; err != nil {
+			helper.Fail(context, 200, err.Error())
+			return
+		}
+
+		helper.Success(context, 200, gin.H{"msg": "删除成功"})
 	})
 }
