@@ -159,7 +159,7 @@ func articleGroup(r *gin.RouterGroup) {
 	r.GET("/article/:id", func(context *gin.Context) {
 		db, _ := helper.Db("rain_dog")
 		var field article.GetField
-		if err := db.Table("article").First(&field).Error; err != nil {
+		if err := db.Table("article").Where("id = ?", context.Param("id")).First(&field).Error; err != nil {
 			helper.Fail(context, 200, "查询失败")
 			return
 		}
