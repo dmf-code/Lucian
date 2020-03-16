@@ -155,7 +155,18 @@ func articleGroup(r *gin.RouterGroup) {
 
 		helper.Success(context, 200, gin.H{"list": fields})
 	})
-	
+
+	r.GET("/article/:id", func(context *gin.Context) {
+		db, _ := helper.Db("rain_dog")
+		var field article.GetField
+		if err := db.Table("article").First(&field).Error; err != nil {
+			helper.Fail(context, 200, "查询失败")
+			return
+		}
+
+		helper.Success(context, 200, gin.H{"list": field})
+	})
+
 	r.DELETE("/article/:id", func(context *gin.Context) {
 		db, _ := helper.Db("rain_dog")
 		var field article.DeleteField
