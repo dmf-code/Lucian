@@ -24,12 +24,7 @@ type Users struct {
 }
 
 func Login(info LoginInfo) (user Users, status bool) {
-	db, err := helper.Db("rain_dog")
-
-	if err != nil {
-		fmt.Println(err)
-		return user, false
-	}
+	db := helper.Db("rain_dog")
 
 	result := db.Table("user").
 		Where("username = ? and password = ?", info.Username, info.Password).
@@ -44,12 +39,7 @@ func Login(info LoginInfo) (user Users, status bool) {
 }
 
 func Register(info RegisterInfo) (status bool) {
-	db, err := helper.Db("rain_dog")
-
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
+	db := helper.Db("rain_dog")
 
 	if err := db.Table("user").Create(&info).Error; err != nil {
 		return false

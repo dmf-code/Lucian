@@ -19,7 +19,7 @@ func Backend(r *gin.RouterGroup) {
 
 func categoryGroup(r *gin.RouterGroup) {
 	r.POST("/category", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field category.PostField
 		_ = context.BindJSON(&field)
 		if err := db.Table("category").Create(&field).Error; err != nil {
@@ -30,7 +30,7 @@ func categoryGroup(r *gin.RouterGroup) {
 	})
 
 	r.PUT("/category/:id/:name", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var putField category.PutField
 		putField.Id = context.Param("id")
 		putField.Name = context.Param("name")
@@ -44,7 +44,7 @@ func categoryGroup(r *gin.RouterGroup) {
 	})
 
 	r.GET("/category", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var fields []category.GetField
 		if err := db.Table("category").Find(&fields).Error; err != nil {
 			helper.Fail(context, err.Error())
@@ -55,7 +55,7 @@ func categoryGroup(r *gin.RouterGroup) {
 	})
 
 	r.DELETE("/category/:id", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field category.DeleteField
 		field.Id = context.Param("id")
 		if err := db.Table("category").Delete(&field).Error; err != nil {
@@ -68,7 +68,7 @@ func categoryGroup(r *gin.RouterGroup) {
 
 func tagGroup(r *gin.RouterGroup) {
 	r.POST("/tag", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field tag.PostField
 		_ = context.BindJSON(&field)
 		if err := db.Table("tag").Create(&field).Error; err != nil {
@@ -79,7 +79,7 @@ func tagGroup(r *gin.RouterGroup) {
 	})
 
 	r.PUT("/tag/:id/:name", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var putField tag.PutField
 		putField.Id = context.Param("id")
 		putField.Name = context.Param("name")
@@ -93,7 +93,7 @@ func tagGroup(r *gin.RouterGroup) {
 	})
 
 	r.GET("/tag", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var fields []tag.GetField
 		if err := db.Table("tag").Find(&fields).Error; err != nil {
 			helper.Fail(context, err.Error())
@@ -104,7 +104,7 @@ func tagGroup(r *gin.RouterGroup) {
 	})
 
 	r.DELETE("/tag/:id", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field tag.DeleteField
 		field.Id = context.Param("id")
 		if err := db.Table("tag").Delete(&field).Error; err != nil {
@@ -117,7 +117,7 @@ func tagGroup(r *gin.RouterGroup) {
 
 func articleGroup(r *gin.RouterGroup) {
 	r.POST("/article", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field article.PostField
 		fmt.Println(context.PostForm("mdCode"))
 		context.BindJSON(&field)
@@ -132,7 +132,7 @@ func articleGroup(r *gin.RouterGroup) {
 	})
 	
 	r.PUT("/article/:id", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var filed article.PutField
 		context.BindJSON(&filed)
 		filed.Id = context.Param("id")
@@ -146,7 +146,7 @@ func articleGroup(r *gin.RouterGroup) {
 	})
 	
 	r.GET("/article", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var fields []article.GetField
 		if err := db.Table("article").Find(&fields).Error; err != nil {
 			helper.Fail(context, "查询失败")
@@ -157,7 +157,7 @@ func articleGroup(r *gin.RouterGroup) {
 	})
 
 	r.GET("/article/:id", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field article.GetField
 		if err := db.Table("article").Where("id = ?", context.Param("id")).First(&field).Error; err != nil {
 			helper.Fail(context, "查询失败")
@@ -168,7 +168,7 @@ func articleGroup(r *gin.RouterGroup) {
 	})
 
 	r.DELETE("/article/:id", func(context *gin.Context) {
-		db, _ := helper.Db("rain_dog")
+		db := helper.Db("rain_dog")
 		var field article.DeleteField
 		field.Id = context.Param("id")
 		if err := db.Table("article").Delete(&field).Error; err != nil {
