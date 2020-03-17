@@ -21,7 +21,7 @@ func setupRouter() *gin.Engine {
 	front := r.Group("/front")
 	{
 		front.GET("ping", func(context *gin.Context) {
-			helper.Success(context, 200, gin.H{"msg": "pong"})
+			helper.Success(context, "pong")
 		})
 	}
 
@@ -31,7 +31,7 @@ func setupRouter() *gin.Engine {
 
 	{
 		backend.GET("ping", func(context *gin.Context) {
-			helper.Success(context, 200, gin.H{"msg": "pong"})
+			helper.Success(context, "pong")
 		})
 		routes.Backend(backend)
 	}

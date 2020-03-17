@@ -18,7 +18,7 @@ func LoginApi(c *gin.Context) {
 	err := c.BindJSON(&loginInfo)
 	if err != nil {
 		fmt.Println(err)
-		helper.Fail(c, 200,  "failed")
+		helper.Fail(c,  "failed")
 	}
 	user, status := auth.Login(loginInfo)
 	fmt.Println(status)
@@ -26,11 +26,11 @@ func LoginApi(c *gin.Context) {
 	newToken, _ := token.CreateToken([]byte(helper.Env("SECRET_KEY")), c.GetHeader("Origin"), user.ID, true)
 
 	if !status {
-		helper.Fail(c, 200, "failed")
+		helper.Fail(c, "failed")
 		return
 	}
 	token.ParseToken(newToken, []byte(helper.Env("SECRET_KEY")))
-	helper.Success(c, 200, gin.H{"user": user, "token": newToken})
+	helper.Success(c, gin.H{"user": user, "token": newToken})
 }
 
 func RegisterApi(c *gin.Context) {
@@ -43,9 +43,9 @@ func RegisterApi(c *gin.Context) {
 		fmt.Println(err)
 	} else {
 		if captcha.VerifyCaptchaHandler(Id, VerifyValue) == false {
-			helper.Fail(c, 200,  "验证码不正确")
+			helper.Fail(c,  "验证码不正确")
 		}
 		auth.Register(registerInfo)
 	}
-	helper.Success(c, 200, gin.H{})
+	helper.Success(c, "注册成功")
 }

@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"net/http"
 	"os"
 )
 
-func Success(ctx *gin.Context,code int, data map[string]interface{}) {
-	ctx.JSON(code, gin.H{"status": true, "data": data})
+func Success(ctx *gin.Context, data interface{}) {
+	ctx.JSON(http.StatusOK, gin.H{"status": true, "data": data})
 	ctx.Abort()
 }
 
-func Fail(ctx *gin.Context, code int, msg string)  {
-	ctx.JSON(code, gin.H{"status":false, "msg": msg})
+func Fail(ctx *gin.Context, data interface{})  {
+	ctx.JSON(http.StatusBadRequest, gin.H{"status": false, "data": data})
 	ctx.Abort()
 }
 
