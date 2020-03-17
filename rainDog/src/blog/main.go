@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"io"
 	"log"
 	"os"
 )
@@ -41,6 +42,11 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+
+	// 配置日志
+	f, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+
 	// 加载.env配置
 	err := godotenv.Load()
 	if err != nil {
