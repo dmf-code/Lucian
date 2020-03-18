@@ -25,6 +25,7 @@ func setupRouter() *gin.Engine {
 		front.GET("ping", func(context *gin.Context) {
 			helper.Success(context, "pong")
 		})
+		routes.Front(front)
 	}
 
 
@@ -58,7 +59,6 @@ func main() {
 		log.Println("init database mysqlTools failure...")
 		os.Exit(1)
 	}
-
 	secretKey := os.Getenv("SECRET_KEY")
 	fmt.Println(secretKey)
 

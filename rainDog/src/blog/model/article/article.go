@@ -2,6 +2,15 @@ package article
 
 import "blog/utils/model"
 
+type Article struct {
+	model.BaseModel
+	MdCode		string `json:"mdCode" gorm:"column:md_code;"`
+	HtmlCode	string `json:"htmlCode" gorm:"html_code;"`
+	Title		string `json:"title"`
+	CategoryIds string `json:"categoryIds" gorm:"column:category_ids;"`
+	TagIds		string `json:"tagIds" gorm:"column:tag_ids;"`
+}
+
 type PostField struct {
 	Title string `json:"title"`
 	CheckedCategorys string `json:"checkedCategory" gorm:"column:category_ids;"`

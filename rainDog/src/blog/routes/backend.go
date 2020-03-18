@@ -118,12 +118,14 @@ func tagGroup(r *gin.RouterGroup) {
 func articleGroup(r *gin.RouterGroup) {
 	r.POST("/article", func(context *gin.Context) {
 		db := helper.Db("rain_dog")
-		var field article.PostField
-		fmt.Println(context.PostForm("mdCode"))
-		context.BindJSON(&field)
+		var field article.Article
+		err := context.Bind(&field)
 		fmt.Println(field)
-
-		if err := db.Table("article").Create(&field).Error; err != nil {
+		if err != nil {
+			helper.Fail(context, "绑定数据失败")
+			return
+		}
+		if err = db.Table("article").Create(&field).Error; err != nil {
 			helper.Fail(context, err.Error())
 			return
 		}
@@ -133,11 +135,10 @@ func articleGroup(r *gin.RouterGroup) {
 	
 	r.PUT("/article/:id", func(context *gin.Context) {
 		db := helper.Db("rain_dog")
-		var filed article.PutField
-		context.BindJSON(&filed)
-		filed.Id = context.Param("id")
-		fmt.Println(filed)
-		if err := db.Table("article").Model(&filed).Updates(filed).Error; err != nil {
+		var filed article.Article
+		requestJson := helper.GetRequestJson(context)
+		filed.ID = helper.GinStr2Uint(context, context.Param("id"))
+		if err := db.Table("article").Model(&filed).Updates(requestJson).Error; err != nil {
 			helper.Fail(context, err.Error())
 			return
 		}
