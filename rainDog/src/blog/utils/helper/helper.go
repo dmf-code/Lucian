@@ -47,7 +47,7 @@ func Env(str string) (res string) {
 }
 
 
-func GinStr2Uint(ctx *gin.Context, str string) (b uint) {
+func Str2Uint(str string) (b uint) {
 	a,_ := strconv.ParseUint(str, 10, 64)
 	b = uint(a)
 	return

@@ -116,67 +116,13 @@ func tagGroup(r *gin.RouterGroup) {
 }
 
 func articleGroup(r *gin.RouterGroup) {
-	r.POST("/article", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field article.Article
-		err := context.Bind(&field)
-		fmt.Println(field)
-		if err != nil {
-			helper.Fail(context, "绑定数据失败")
-			return
-		}
-		if err = db.Table("article").Create(&field).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-
-		helper.Success(context, "success")
-	})
+	r.POST("/article", article.Store)
 	
-	r.PUT("/article/:id", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var filed article.Article
-		requestJson := helper.GetRequestJson(context)
-		filed.ID = helper.GinStr2Uint(context, context.Param("id"))
-		if err := db.Table("article").Model(&filed).Updates(requestJson).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-
-		helper.Success(context, "更新成功")
-	})
+	r.PUT("/article/:id", article.Update)
 	
-	r.GET("/article", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var fields []article.GetField
-		if err := db.Table("article").Find(&fields).Error; err != nil {
-			helper.Fail(context, "查询失败")
-			return
-		}
+	r.GET("/article", article.Index)
 
-		helper.Success(context, fields)
-	})
+	r.GET("/article/:id", article.Show)
 
-	r.GET("/article/:id", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field article.GetField
-		if err := db.Table("article").Where("id = ?", context.Param("id")).First(&field).Error; err != nil {
-			helper.Fail(context, "查询失败")
-			return
-		}
-
-		helper.Success(context, field)
-	})
-
-	r.DELETE("/article/:id", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field article.DeleteField
-		field.Id = context.Param("id")
-		if err := db.Table("article").Delete(&field).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-
-		helper.Success(context, "删除成功")
-	})
+	r.DELETE("/article/:id", article.Destroy)
 }

@@ -19,3 +19,14 @@ go run main.go
 > 注意这里面会出现被墙的问题，导致无法下载包的问题这里面可以设置代理解决
 > set http_proxy=127.0.0.1:1080 （这个是我的小飞机的代理端口）
 
+
+### Restful接口 命名推荐如下
+
+|   HTTP方法   |   URI   |  动作    |
+| ----         | ----               | ----    |
+|   GET        |    /photos	        |   index   |
+|   GET        |    /photos/:photo  |   show   |
+|   PUT        |    /photos/:photo  |   update   |
+|   POST       |    /photos         |   store |
+|   DELETE     |    /photos/:photo  |   destroy   |
+
