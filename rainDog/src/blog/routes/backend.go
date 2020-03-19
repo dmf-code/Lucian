@@ -4,8 +4,6 @@ import (
 	"blog/model/article"
 	"blog/model/category"
 	"blog/model/tag"
-	"blog/utils/helper"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,52 +16,13 @@ func Backend(r *gin.RouterGroup) {
 }
 
 func categoryGroup(r *gin.RouterGroup) {
-	r.POST("/category", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field category.PostField
-		_ = context.BindJSON(&field)
-		if err := db.Table("category").Create(&field).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-		helper.Success(context,  "success")
-	})
+	r.POST("/category", category.Store)
 
-	r.PUT("/category/:id/:name", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var putField category.PutField
-		putField.Id = context.Param("id")
-		putField.Name = context.Param("name")
-		fmt.Println(putField)
-		if err := db.Table("category").Model(&putField).Update("name", putField.Name).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
+	r.PUT("/category/:id", category.Update)
 
-		helper.Success(context, "success")
-	})
+	r.GET("/category", category.Index)
 
-	r.GET("/category", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var fields []category.GetField
-		if err := db.Table("category").Find(&fields).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-		fmt.Println(fields)
-		helper.Success(context, fields)
-	})
-
-	r.DELETE("/category/:id", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field category.DeleteField
-		field.Id = context.Param("id")
-		if err := db.Table("category").Delete(&field).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-		helper.Success(context, "success")
-	})
+	r.DELETE("/category/:id", category.Destroy)
 }
 
 func tagGroup(r *gin.RouterGroup) {
