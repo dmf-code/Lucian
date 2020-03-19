@@ -67,52 +67,13 @@ func categoryGroup(r *gin.RouterGroup) {
 }
 
 func tagGroup(r *gin.RouterGroup) {
-	r.POST("/tag", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field tag.PostField
-		_ = context.BindJSON(&field)
-		if err := db.Table("tag").Create(&field).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-		helper.Success(context, "success")
-	})
+	r.POST("/tag", tag.Store)
 
-	r.PUT("/tag/:id/:name", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var putField tag.PutField
-		putField.Id = context.Param("id")
-		putField.Name = context.Param("name")
-		fmt.Println(putField)
-		if err := db.Table("tag").Model(&putField).Update("name", putField.Name).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
+	r.PUT("/tag/:id", tag.Update)
 
-		helper.Success(context,"success")
-	})
+	r.GET("/tag", tag.Index)
 
-	r.GET("/tag", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var fields []tag.GetField
-		if err := db.Table("tag").Find(&fields).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-		fmt.Println(fields)
-		helper.Success(context, fields)
-	})
-
-	r.DELETE("/tag/:id", func(context *gin.Context) {
-		db := helper.Db("rain_dog")
-		var field tag.DeleteField
-		field.Id = context.Param("id")
-		if err := db.Table("tag").Delete(&field).Error; err != nil {
-			helper.Fail(context, err.Error())
-			return
-		}
-		helper.Success(context, "success")
-	})
+	r.DELETE("/tag/:id", tag.Destroy)
 }
 
 func articleGroup(r *gin.RouterGroup) {
