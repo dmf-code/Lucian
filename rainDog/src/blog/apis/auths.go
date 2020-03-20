@@ -8,10 +8,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
-type LoginInfo struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
 
 func LoginApi(c *gin.Context) {
 	user, status := auth.Login(c)

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"blog/model/auth"
+	"blog/model/manage"
 	"blog/utils/helper"
 	"blog/utils/token"
 	"fmt"
@@ -15,7 +15,7 @@ func AccessTokenMiddleware() gin.HandlerFunc{
 		fmt.Println(authored)
 		if data, err := token.ParseToken(authored, []byte(helper.Env("SECRET_KEY"))); err == nil {
 			// 验证通过，会继续访问下一个中间件
-			var user auth.Users
+			var user manage.User
 			db := helper.Db("rain_dog")
 			uid := token.GetIdFromClaims("uid", data)
 			fmt.Println(data)

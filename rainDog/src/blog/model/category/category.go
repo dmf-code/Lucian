@@ -1,8 +1,8 @@
 package category
 
 import (
+	"blog/model"
 	"blog/utils/helper"
-	"blog/utils/model"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )

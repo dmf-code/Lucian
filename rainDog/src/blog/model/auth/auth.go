@@ -1,20 +1,14 @@
 package auth
 
 import (
+	"blog/model/manage"
 	"blog/utils/helper"
-	"blog/utils/model"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Users struct {
-	model.BaseModel
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-func Login(ctx *gin.Context) (user Users, status bool) {
+func Login(ctx *gin.Context) (user manage.User, status bool) {
 	db := helper.Db("rain_dog")
 	requestMap := helper.GetRequestJson(ctx)
 	result := db.Table("user").

@@ -2,6 +2,7 @@ package main
 
 import (
 	"blog/middleware"
+	"blog/model/manage"
 	"blog/routes"
 	"blog/utils/helper"
 	"blog/utils/mysqlTools"
@@ -42,6 +43,12 @@ func setupRouter() *gin.Engine {
 	return r
 }
 
+func Migration() {
+	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Menu)).Error)
+	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Role)).Error)
+	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.User)).Error)
+}
+
 func main() {
 
 	// 配置日志
@@ -59,6 +66,10 @@ func main() {
 		log.Println("init database mysqlTools failure...")
 		os.Exit(1)
 	}
+
+	// 初始化数据表
+	Migration()
+
 	secretKey := os.Getenv("SECRET_KEY")
 	fmt.Println(secretKey)
 

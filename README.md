@@ -30,3 +30,9 @@ go run main.go
 |   POST       |    /photos         |   store |
 |   DELETE     |    /photos/:photo  |   destroy   |
 
+
+
+### 参考项目
+```text
+https://github.com/it234/goapp
+```
