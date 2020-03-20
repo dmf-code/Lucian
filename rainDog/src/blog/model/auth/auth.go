@@ -4,30 +4,21 @@ import (
 	"blog/utils/helper"
 	"blog/utils/model"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type RegisterInfo struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type LoginInfo struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 type Users struct {
 	model.BaseModel
-	Username string
-	password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func Login(info LoginInfo) (user Users, status bool) {
+func Login(ctx *gin.Context) (user Users, status bool) {
 	db := helper.Db("rain_dog")
-
+	requestMap := helper.GetRequestJson(ctx)
 	result := db.Table("user").
-		Where("username = ? and password = ?", info.Username, info.Password).
+		Where("username = ? and password = ?", requestMap["username"], requestMap["password"]).
 		First(&user)
 
 	if result.Error != nil {
@@ -38,10 +29,10 @@ func Login(info LoginInfo) (user Users, status bool) {
 	return user, true
 }
 
-func Register(info RegisterInfo) (status bool) {
+func Register(ctx *gin.Context) (status bool) {
 	db := helper.Db("rain_dog")
-
-	if err := db.Table("user").Create(&info).Error; err != nil {
+	requestMap := helper.GetRequestJson(ctx)
+	if err := db.Table("user").Create(&requestMap).Error; err != nil {
 		return false
 	}
 

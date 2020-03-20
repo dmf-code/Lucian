@@ -14,13 +14,7 @@ type LoginInfo struct {
 }
 
 func LoginApi(c *gin.Context) {
-	var loginInfo auth.LoginInfo
-	err := c.BindJSON(&loginInfo)
-	if err != nil {
-		fmt.Println(err)
-		helper.Fail(c,  "failed")
-	}
-	user, status := auth.Login(loginInfo)
+	user, status := auth.Login(c)
 	fmt.Println(status)
 	fmt.Println(user)
 	newToken, _ := token.CreateToken([]byte(helper.Env("SECRET_KEY")), c.GetHeader("Origin"), user.ID, true)
@@ -34,18 +28,11 @@ func LoginApi(c *gin.Context) {
 }
 
 func RegisterApi(c *gin.Context) {
-	var registerInfo auth.RegisterInfo
-	err := c.BindJSON(&registerInfo)
 	Id := c.Param("Id")
 	VerifyValue := c.Param("VerifyValue")
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		if captcha.VerifyCaptchaHandler(Id, VerifyValue) == false {
+	if captcha.VerifyCaptchaHandler(Id, VerifyValue) == false {
 			helper.Fail(c,  "验证码不正确")
-		}
-		auth.Register(registerInfo)
 	}
+	auth.Register(c)
 	helper.Success(c, "注册成功")
 }
