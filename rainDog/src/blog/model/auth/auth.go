@@ -8,10 +8,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Login(ctx *gin.Context) (user manage.User, status bool) {
+func Login(ctx *gin.Context) (user manage.Admin, status bool) {
 	db := helper.Db("rain_dog")
 	requestMap := helper.GetRequestJson(ctx)
-	result := db.Table("user").
+	result := db.Table("admin").
 		Where("username = ? and password = ?", requestMap["username"], requestMap["password"]).
 		First(&user)
 
@@ -26,7 +26,7 @@ func Login(ctx *gin.Context) (user manage.User, status bool) {
 func Register(ctx *gin.Context) (status bool) {
 	db := helper.Db("rain_dog")
 	requestMap := helper.GetRequestJson(ctx)
-	if err := db.Table("user").Create(&requestMap).Error; err != nil {
+	if err := db.Table("admin").Create(&requestMap).Error; err != nil {
 		return false
 	}
 

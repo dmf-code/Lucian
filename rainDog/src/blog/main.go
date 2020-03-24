@@ -46,7 +46,9 @@ func setupRouter() *gin.Engine {
 func Migration() {
 	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Menu)).Error)
 	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Role)).Error)
-	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.User)).Error)
+	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Admin)).Error)
+	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.RoleMenu)).Error)
+	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.AdminRole)).Error)
 }
 
 func main() {
