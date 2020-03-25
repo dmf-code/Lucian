@@ -33,7 +33,7 @@ func (m *Menu) BeforeCreate(scope *gorm.Scope) error {
 }
 
 // 更新之前
-func (m *Menu) BeforeUpdate(scope gorm.Scope) error {
+func (m *Menu) BeforeUpdate(scope *gorm.Scope) error {
 	m.UpdatedAt = format.JSONTime{Time: time.Now()}
 	return nil
 }

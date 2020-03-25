@@ -39,10 +39,13 @@ func (m *MysqlPool) InitDataPool() (status bool) {
 	db.DB().SetMaxIdleConns(10)
 
 	// SetMaxOpenCons 设置数据库的最大连接数量。
-	db.DB().SetMaxOpenConns(100)
+	db.DB().SetMaxOpenConns(120)
 
 	// SetConnMaxLifetiment 设置连接的最大可复用时间。
-	db.DB().SetConnMaxLifetime(time.Hour)
+	// 数据库中查询 show global variables like "%timeout%"
+	// 查看interactive_timeout 和 wait_timeout 的值
+	// 设置成和这两个值一致
+	db.DB().SetConnMaxLifetime(time.Second * 120)
 	fmt.Println(errorDb)
 	if errorDb != nil {
 		log.Fatal(errorDb)

@@ -27,7 +27,8 @@ func (m *Role) BeforeCreate(scope *gorm.Scope) error {
 }
 
 // 更新之前
-func (m *Role) BeforeUpdate(scope gorm.Scope) error {
+func (m *Role) BeforeUpdate(scope *gorm.Scope) error {
 	m.UpdatedAt = format.JSONTime{Time: time.Now()}
 	return nil
 }
+

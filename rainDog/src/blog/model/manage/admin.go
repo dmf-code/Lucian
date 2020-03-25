@@ -14,7 +14,7 @@ type Admin struct {
 }
 
 func (Admin) TableName()string {
-	return model.TableName("menu")
+	return model.TableName("admin")
 }
 
 // 添加之前
@@ -25,7 +25,7 @@ func (m *Admin) BeforeCreate(scope *gorm.Scope) error {
 }
 
 // 更新之前
-func (m *Admin) BeforeUpdate(scope gorm.Scope) error {
+func (m *Admin) BeforeUpdate(scope *gorm.Scope) error {
 	m.UpdatedAt = format.JSONTime{Time: time.Now()}
 	return nil
 }
