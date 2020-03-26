@@ -59,3 +59,36 @@ func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
 		}
 	}
 }
+
+// 重置角色权限
+func resetRolePermission(roleId uint64) {
+	if Enforcer == nil {
+		return
+	}
+	Enforcer.DeletePermissionsForUser(PrefixRoleId + strconv.FormatInt(int64(roleId), 10))
+	setRolePermission(helper.Db(), Enforcer, roleId)
+}
+
+// 设置用户角色之间的关系
+func AddRoleForUser(userId uint64) (err error) {
+	if Enforcer == nil {
+		return
+	}
+	uid := PrefixUserId + strconv.FormatInt(int64(userId), 10)
+
+	Enforcer.DeleteRolesForUser(uid)
+	var adminRoles []manage.AdminRole
+	db := helper.Db("rain_dog")
+	if err = db.Table("admin_role").Model(&manage.AdminRole{AdminId: userId}).Find(&adminRoles).Error; err != nil {
+		return
+	}
+	for _, adminRole := range adminRoles {
+		Enforcer.AddRoleForUser(uid, PrefixRoleId + strconv.FormatInt(int64(adminRole.RoleId), 10))
+	}
+	return
+}
+
+// 检查用户是否拥有权限
+func CheckPermission(userId, url, method string) (bool, error) {
+	return Enforcer.EnforceSafe(PrefixUserId + userId, url, method)
+}

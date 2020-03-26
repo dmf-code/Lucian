@@ -37,7 +37,7 @@ func GetRequestJson(ctx *gin.Context) (requestMap map[string]interface{}) {
 	return
 }
 
-func Db(dbName string) (con *gorm.DB) {
+func Db() (con *gorm.DB) {
 	return mysqlTools.GetInstance().GetMysqlDB()
 }
 
