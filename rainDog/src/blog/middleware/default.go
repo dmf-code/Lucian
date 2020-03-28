@@ -16,7 +16,7 @@ func AccessTokenMiddleware() gin.HandlerFunc{
 		if data, err := token.ParseToken(authored, []byte(helper.Env("SECRET_KEY"))); err == nil {
 			// 验证通过，会继续访问下一个中间件
 			var user manage.Admin
-			db := helper.Db("rain_dog")
+			db := helper.Db()
 			uid := token.GetIdFromClaims("uid", data)
 			fmt.Println(data)
 			db.Table("admin").Where("id = ?", uid).First(&user)

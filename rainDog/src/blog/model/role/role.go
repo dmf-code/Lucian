@@ -8,7 +8,7 @@ import (
 )
 
 func Index(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var fields []manage.Role
 	if err := db.Table("role").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
@@ -19,7 +19,7 @@ func Index(ctx *gin.Context) {
 }
 
 func Show(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field manage.Role
 	if err := db.Table("role").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
@@ -30,7 +30,7 @@ func Show(ctx *gin.Context) {
 }
 
 func Store(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field manage.Role
 	err := ctx.Bind(&field)
 	fmt.Println(field)
@@ -47,7 +47,7 @@ func Store(ctx *gin.Context) {
 }
 
 func Update(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var filed manage.Role
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
@@ -60,7 +60,7 @@ func Update(ctx *gin.Context) {
 }
 
 func Destroy(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field manage.Role
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role").Delete(&field).Error; err != nil {

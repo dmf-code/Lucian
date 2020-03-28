@@ -18,7 +18,7 @@ type Article struct {
 
 
 func Index(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var fields []Article
 	if err := db.Table("article").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
@@ -29,7 +29,7 @@ func Index(ctx *gin.Context) {
 }
 
 func Show(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field Article
 	if err := db.Table("article").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
@@ -40,7 +40,7 @@ func Show(ctx *gin.Context) {
 }
 
 func Store(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field Article
 	err := ctx.Bind(&field)
 	fmt.Println(field)
@@ -57,7 +57,7 @@ func Store(ctx *gin.Context) {
 }
 
 func Update(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var filed Article
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
@@ -70,7 +70,7 @@ func Update(ctx *gin.Context) {
 }
 
 func Destroy(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field Article
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("article").Delete(&field).Error; err != nil {

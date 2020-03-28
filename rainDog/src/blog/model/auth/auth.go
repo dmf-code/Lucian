@@ -9,7 +9,7 @@ import (
 )
 
 func Login(ctx *gin.Context) (user manage.Admin, status bool) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	requestMap := helper.GetRequestJson(ctx)
 	result := db.Table("admin").
 		Where("username = ? and password = ?", requestMap["username"], requestMap["password"]).
@@ -24,7 +24,7 @@ func Login(ctx *gin.Context) (user manage.Admin, status bool) {
 }
 
 func Register(ctx *gin.Context) (status bool) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	requestMap := helper.GetRequestJson(ctx)
 	if err := db.Table("admin").Create(&requestMap).Error; err != nil {
 		return false

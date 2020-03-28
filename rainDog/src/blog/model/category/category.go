@@ -14,7 +14,7 @@ type Category struct {
 }
 
 func Index(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var fields []Category
 	if err := db.Table("tag").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
@@ -25,7 +25,7 @@ func Index(ctx *gin.Context) {
 }
 
 func Show(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field Category
 	if err := db.Table("tag").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
@@ -36,7 +36,7 @@ func Show(ctx *gin.Context) {
 }
 
 func Store(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field Category
 	err := ctx.Bind(&field)
 	field.Num = 0
@@ -54,7 +54,7 @@ func Store(ctx *gin.Context) {
 }
 
 func Update(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var filed Category
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
@@ -67,7 +67,7 @@ func Update(ctx *gin.Context) {
 }
 
 func Destroy(ctx *gin.Context) {
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	var field Category
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("tag").Delete(&field).Error; err != nil {

@@ -23,7 +23,7 @@ func Init() {
 	}
 
 	var roles []manage.Role
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	if err = db.Table("role").Find(&roles).Error; err != nil {
 		fmt.Println(err)
 	}
@@ -78,7 +78,7 @@ func AddRoleForUser(userId uint64) (err error) {
 
 	Enforcer.DeleteRolesForUser(uid)
 	var adminRoles []manage.AdminRole
-	db := helper.Db("rain_dog")
+	db := helper.Db()
 	if err = db.Table("admin_role").Model(&manage.AdminRole{AdminId: userId}).Find(&adminRoles).Error; err != nil {
 		return
 	}
