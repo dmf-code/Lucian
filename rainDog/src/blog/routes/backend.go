@@ -5,6 +5,7 @@ import (
 	"blog/model/category"
 	"blog/model/menu"
 	"blog/model/role"
+	"blog/model/roleMenu"
 	"blog/model/tag"
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +20,8 @@ func Backend(r *gin.RouterGroup) {
 	roleGroup(r)
 
 	menuGroup(r)
+
+	roleMenuGroup(r)
 }
 
 func categoryGroup(r *gin.RouterGroup) {
@@ -76,4 +79,17 @@ func menuGroup(r *gin.RouterGroup) {
 
 	r.DELETE("/menu/:id", menu.Destroy)
 }
+
+func roleMenuGroup(r *gin.RouterGroup) {
+	r.POST("/roleMenu", roleMenu.Store)
+
+	r.PUT("/roleMenu/:id", roleMenu.Update)
+
+	r.GET("/roleMenu", roleMenu.Index)
+
+	r.GET("/roleMenu/:id", roleMenu.Show)
+
+	r.DELETE("/roleMenu/:id", roleMenu.Destroy)
+}
+
 
