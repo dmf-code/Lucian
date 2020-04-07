@@ -115,7 +115,7 @@ func Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field manage.RoleMenu
 	field.ID = helper.Str2Uint(ctx.Param("id"))
-	if err := db.Table("role_menu").Delete(&field).Error; err != nil {
+	if err := db.Table("role_menu").Unscoped().Delete(&field).Error; err != nil {
 		helper.Fail(ctx, err.Error())
 		return
 	}
