@@ -16,7 +16,7 @@ type Menu struct {
 	Name  		string	`gorm:"column:name;size:32;not null;" json:"name" form:"name"`									// 菜单名称
 	Sequence	int		`gorm:"column:sequence;not null;" json:"sequence" form:"sequence"`								// 排序值
 	Type		uint8	`gorm:"column:type;type: tinyint(1);not null;" json:"type" form:"type"`							// 菜单类型
-	Code		string	`gorm:"column:code;size:32;not null;unique_index:uk_menu_code;" json:"code" form:"code"`		// 菜单代码
+	Code		string	`gorm:"column:code;size:32;not null;" json:"code" form:"code"`		// 菜单代码
 	Icon		string	`gorm:"column:icon;size:32;" json:"icon" form:"icon"`											// icon
 	OperateType	string	`gorm:"column:operate_type;size:32;not null;" json:"operate_type" form:"operate_type"`			// 操作类型 none/add/del/view/update
 }

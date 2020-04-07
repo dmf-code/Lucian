@@ -54,3 +54,12 @@ func Str2Uint(str string) (b uint) {
 }
 
 
+func Float64ToInt(f float64) (res int) {
+	tmp := strconv.FormatFloat(f, 'f', -1, 64)
+	var err error
+	res, err = strconv.Atoi(tmp)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return
+}
