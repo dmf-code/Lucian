@@ -27,6 +27,8 @@ func Index(ctx *gin.Context) {
 		return
 	}
 	var res []interface{}
+	var menuIds []int
+
 	for fields.Next() {
 		var id,roleId,menuId int
 		var roleName, menuName string
@@ -50,11 +52,13 @@ func Index(ctx *gin.Context) {
 			updateAt.Format(format.TimeFormat),
 		}
 
+		menuIds = append(menuIds, menuId)
 		fmt.Println(item)
 		res = append(res, item)
 		fmt.Println(err)
 	}
-	helper.Success(ctx, res)
+
+	helper.Success(ctx, res, menuIds)
 }
 
 func Show(ctx *gin.Context) {

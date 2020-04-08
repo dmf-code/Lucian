@@ -11,8 +11,8 @@ import (
 	"strconv"
 )
 
-func Success(ctx *gin.Context, data interface{}) {
-	ctx.JSON(http.StatusOK, gin.H{"status": true, "data": data})
+func Success(ctx *gin.Context, data interface{}, args ...interface{}) {
+	ctx.JSON(http.StatusOK, gin.H{"status": true, "data": data, "args": args})
 	ctx.Abort()
 }
 
