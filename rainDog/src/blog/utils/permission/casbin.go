@@ -47,7 +47,7 @@ func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
 	}
 	for _, roleMenu := range roleMenus {
 		var menu manage.Menu
-		if err = db.Table("menu").Where("id = ?", roleMenu.MenuId).First(&menu).Error; err != nil {
+		if err := db.Table("menu").Where("id = ?", roleMenu.MenuId).First(&menu).Error; err != nil {
 			fmt.Println(err)
 		}
 
@@ -88,7 +88,21 @@ func AddRoleForUser(userId uint64) (err error) {
 	return
 }
 
+// 删除角色
+func DeleteRole(roleIds []int) {
+	if Enforcer == nil {
+		return
+	}
+
+	for _, roleId := range roleIds  {
+		Enforcer.DeletePermissionsForUser(PrefixRoleId + strconv.FormatInt(int64(roleId), 10))
+		Enforcer.DeleteRole(PrefixRoleId + strconv.FormatInt(int64(roleId), 10))
+	}
+
+}
+
 // 检查用户是否拥有权限
 func CheckPermission(userId, url, method string) (bool, error) {
 	return Enforcer.EnforceSafe(PrefixUserId + userId, url, method)
 }
+
