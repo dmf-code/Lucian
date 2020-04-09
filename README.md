@@ -31,8 +31,19 @@ go run main.go
 |   DELETE     |    /photos/:photo  |   destroy   |
 
 
+### Casbin 权限介绍
+```text
+EnforceSafe 检查权限 (bool, error)
+```
+
 
 ### 参考项目
 ```text
 https://github.com/it234/goapp
 ```
+
+## 感谢以下框架的开源支持
+
+- [Gin] - [https://gin-gonic.com/](https://gin-gonic.com/)
+- [GORM] - [http://gorm.io/](http://gorm.io/)
+- [Casbin] - [https://casbin.org/](https://casbin.org/)
