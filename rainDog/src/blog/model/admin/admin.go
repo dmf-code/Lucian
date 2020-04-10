@@ -10,11 +10,11 @@ import (
 func Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []manage.Admin
-	if err := db.Table("admin").Find(&fields).Error; err != nil {
+	if err := db.Table("admin").Select("id,username").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
 	}
-
+	fmt.Println(fields)
 	helper.Success(ctx, fields)
 }
 
