@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"blog/model/admin"
+	"blog/model/adminRole"
 	"blog/model/article"
 	"blog/model/category"
 	"blog/model/menu"
@@ -17,9 +19,13 @@ func Backend(r *gin.RouterGroup) {
 	
 	articleGroup(r)
 
+	adminGroup(r)
+
 	roleGroup(r)
 
 	menuGroup(r)
+
+	adminRoleGroup(r)
 
 	roleMenuGroup(r)
 }
@@ -56,6 +62,16 @@ func articleGroup(r *gin.RouterGroup) {
 	r.DELETE("/article/:id", article.Destroy)
 }
 
+func adminGroup(r *gin.RouterGroup) {
+	r.POST("/admin", admin.Store)
+
+	r.PUT("/admin/:id", admin.Update)
+
+	r.GET("/admin", admin.Index)
+
+	r.DELETE("/admin/:id", admin.Destroy)
+}
+
 func roleGroup(r *gin.RouterGroup) {
 	r.POST("/role", role.Store)
 
@@ -79,6 +95,19 @@ func menuGroup(r *gin.RouterGroup) {
 
 	r.DELETE("/menu/:id", menu.Destroy)
 }
+
+func adminRoleGroup(r *gin.RouterGroup) {
+	r.POST("/adminRole", adminRole.Store)
+
+	r.PUT("/adminRole/:id", adminRole.Update)
+
+	r.GET("/adminRole", adminRole.Index)
+
+	r.GET("/adminRole/:id", adminRole.Show)
+
+	r.DELETE("/adminRole/:id", adminRole.Destroy)
+}
+
 
 func roleMenuGroup(r *gin.RouterGroup) {
 	r.POST("/roleMenu", roleMenu.Store)
