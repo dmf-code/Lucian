@@ -63,13 +63,13 @@ func Index(ctx *gin.Context) {
 
 func Show(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.AdminRole
-	if err := db.Table("admin_role").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
+	var fields []int
+	if err := db.Table("admin_role").Where("admin_id = ?", ctx.Param("id")).Pluck("role_id", &fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	helper.Success(ctx, fields)
 }
 
 func Store(ctx *gin.Context) {

@@ -21,7 +21,7 @@ func Index(ctx *gin.Context) {
 func Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field manage.Admin
-	if err := db.Table("admin").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
+	if err := db.Table("admin").Select("id,username").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
 	}

@@ -69,6 +69,8 @@ func adminGroup(r *gin.RouterGroup) {
 
 	r.GET("/admin", admin.Index)
 
+	r.GET("/admin/:id", admin.Show)
+
 	r.DELETE("/admin/:id", admin.Destroy)
 }
 
