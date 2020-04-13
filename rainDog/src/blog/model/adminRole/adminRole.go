@@ -78,6 +78,8 @@ func Store(ctx *gin.Context) {
 
 	adminId := helper.Float64ToInt(requestJson["admin_id"].(float64))
 
+	db.Unscoped().Where("admin_id = ?", adminId).Delete(&manage.AdminRole{})
+
 	roleIdStr := requestJson["role_id"].(string)
 	roleIds := strings.Split(roleIdStr, ",")
 
