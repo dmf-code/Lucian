@@ -7,8 +7,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Menu struct {
+type TreeList struct {
+	Id        uint         `json:"id"`
+	Name     string      `json:"name"`
+	Pid       uint64         `json:"pid"`
+	Sequence      int         `json:"sequence"`
+	Url      string      `json:"url"`
+	Component string      `json:"component"`
+	Icon      string      `json:"icon"`
+	Children  []*TreeList `json:"children"`
+}
 
+func getMenu(pid int) []*TreeList {
+	var menus []manage.Menu
+	helper.Db().Table("menu").Where("parent_id = ?", pid).Order("sequence").Find(&menus)
+	treeList := []*TreeList{}
+	for _, v := range menus {
+		child := getMenu(int(v.ID))
+		node := &TreeList{
+			Id: v.ID,
+			Name: v.Name,
+			Sequence: v.Sequence,
+			Url: v.Url,
+			Pid: v.ParentID,
+		}
+		node.Children = child
+		treeList = append(treeList, node)
+	}
+
+	return treeList
 }
 
 func Index(ctx *gin.Context) {
@@ -72,3 +99,10 @@ func Destroy(ctx *gin.Context) {
 	helper.Success(ctx, "删除成功")
 }
 
+
+
+
+func List(ctx *gin.Context) {
+	sql := "SELECT * FROM `menu` as a LEFT JOIN `menu` as b ON a.id = b.parent_id;"
+	helper.Db().Raw(sql)
+}
