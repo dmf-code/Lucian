@@ -17,7 +17,8 @@ const (
 var Enforcer *casbin.Enforcer
 
 func Init() {
-	enforcer, err := casbin.NewEnforcerSafe("conf/model.conf")
+
+	enforcer, err := casbin.NewEnforcerSafe("conf/rbac_model.conf")
 	if err != nil {
 		fmt.Println(err)
 	}

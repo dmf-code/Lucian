@@ -17,3 +17,4 @@ const tablePrefix = ""
 func TableName(name string) string {
 	return fmt.Sprintf("%s%s%s", tablePrefix, "", name)
 }
+

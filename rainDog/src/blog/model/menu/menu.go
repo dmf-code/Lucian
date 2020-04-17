@@ -8,27 +8,29 @@ import (
 )
 
 type TreeList struct {
-	Id        uint         `json:"id"`
-	Name     string      `json:"name"`
-	Pid       uint64         `json:"pid"`
-	Sequence      int         `json:"sequence"`
-	Url      string      `json:"url"`
-	Component string      `json:"component"`
-	Icon      string      `json:"icon"`
-	Children  []*TreeList `json:"children"`
+	Id        	uint        `json:"id"`
+	Name     	string      `json:"name"`
+	Pid       	uint64      `json:"pid"`
+	Sequence    int         `json:"sequence"`
+	Url      	string      `json:"url"`
+	FullUrl		string		`json:"full_url"`
+	Component 	string      `json:"component"`
+	Icon      	string      `json:"icon"`
+	Children  	[]*TreeList `json:"children"`
 }
 
-func getMenu(pid int) []*TreeList {
+func getMenu(pid int, path string) []*TreeList {
 	var menus []manage.Menu
 	helper.Db().Table("menu").Where("parent_id = ?", pid).Order("sequence").Find(&menus)
 	treeList := []*TreeList{}
 	for _, v := range menus {
-		child := getMenu(int(v.ID))
+		child := getMenu(int(v.ID), v.Url)
 		node := &TreeList{
 			Id: v.ID,
 			Name: v.Name,
 			Sequence: v.Sequence,
 			Url: v.Url,
+			FullUrl: path + "/" + v.Url,
 			Pid: v.ParentID,
 		}
 		node.Children = child
@@ -99,10 +101,7 @@ func Destroy(ctx *gin.Context) {
 	helper.Success(ctx, "删除成功")
 }
 
-
-
-
 func List(ctx *gin.Context) {
-	sql := "SELECT * FROM `menu` as a LEFT JOIN `menu` as b ON a.id = b.parent_id;"
-	helper.Db().Raw(sql)
+	treeList := getMenu(0, "")
+	helper.Success(ctx, treeList)
 }
