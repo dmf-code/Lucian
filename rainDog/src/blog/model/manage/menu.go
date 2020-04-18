@@ -16,8 +16,7 @@ type Menu struct {
 	Name  		string	`gorm:"column:name;size:32;not null;" json:"name" form:"name"`									// 菜单名称
 	Sequence	int		`gorm:"column:sequence;not null;" json:"sequence" form:"sequence"`								// 排序值
 	Type		uint8	`gorm:"column:type;type: tinyint(1);not null;" json:"type" form:"type"`							// 菜单类型 (1.目录 2.菜单 3.按钮 4.接口)
-	Component	string	`gorm:"column:component;size:32;not null;" json:"component" form:"component"`					// 组件路径
-	Meta		string	`gorm:"column:meta;size:64;not null;" json:"meta" form:"meta"`									// 元数据
+	Component	string	`gorm:"column:component;size:255;not null;" json:"component" form:"component"`					// 组件路径
 	Icon		string	`gorm:"column:icon;size:32;" json:"icon" form:"icon"`											// icon
 	OperateType	string	`gorm:"column:operate_type;size:32;not null;" json:"operate_type" form:"operate_type"`			// 操作类型 none/add/del/view/update
 }

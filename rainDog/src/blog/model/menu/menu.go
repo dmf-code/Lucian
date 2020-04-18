@@ -21,7 +21,16 @@ type TreeList struct {
 
 func getMenu(pid int, path string) []*TreeList {
 	var menus []manage.Menu
-	helper.Db().Table("menu").Where("parent_id = ?", pid).Order("sequence").Find(&menus)
+	if pid == 0 {
+		helper.Db().
+			Table("menu").
+			Where("parent_id = ?", pid).
+			Where("url = ?", "/admin").
+			Order("sequence").
+			Find(&menus)
+	} else {
+		helper.Db().Table("menu").Where("parent_id = ?", pid).Order("sequence").Find(&menus)
+	}
 	treeList := []*TreeList{}
 	for _, v := range menus {
 		child := getMenu(int(v.ID), v.Url)
