@@ -33,6 +33,9 @@ func getMenu(pid int, path string) []*TreeList {
 	}
 	treeList := []*TreeList{}
 	for _, v := range menus {
+		if v.Type >= 3 {
+			continue
+		}
 		child := getMenu(int(v.ID), v.Url)
 		node := &TreeList{
 			Id: v.ID,
@@ -41,6 +44,7 @@ func getMenu(pid int, path string) []*TreeList {
 			Url: v.Url,
 			FullUrl: path + "/" + v.Url,
 			Pid: v.ParentID,
+			Icon: v.Icon,
 		}
 		node.Children = child
 		treeList = append(treeList, node)
