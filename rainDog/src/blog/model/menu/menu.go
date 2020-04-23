@@ -40,6 +40,7 @@ func getMenu(pid int, path string) []*TreeList {
 		node := &TreeList{
 			Id: v.ID,
 			Name: v.Name,
+			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
 			FullUrl: path + "/" + v.Url,
