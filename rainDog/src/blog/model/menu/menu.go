@@ -11,12 +11,14 @@ type TreeList struct {
 	Id        	uint        `json:"id"`
 	Name     	string      `json:"name"`
 	Pid       	uint64      `json:"pid"`
+	Label		string 		`json:"label"`	//冗余前端字段
+	Value 		uint64		`json:"value"`	//冗余前端字段
 	Sequence    int         `json:"sequence"`
 	Url      	string      `json:"url"`
 	FullUrl		string		`json:"full_url"`
 	Component 	string      `json:"component"`
 	Icon      	string      `json:"icon"`
-	Children  	[]*TreeList `json:"children"`
+	Children  	[]*TreeList `json:"children,omitempty"`
 }
 
 func getMenu(pid int, path string) []*TreeList {
@@ -31,7 +33,7 @@ func getMenu(pid int, path string) []*TreeList {
 	} else {
 		helper.Db().Table("menu").Where("parent_id = ?", pid).Order("sequence").Find(&menus)
 	}
-	treeList := []*TreeList{}
+	var treeList []*TreeList
 	for _, v := range menus {
 		if v.Type >= 3 {
 			continue
@@ -40,6 +42,8 @@ func getMenu(pid int, path string) []*TreeList {
 		node := &TreeList{
 			Id: v.ID,
 			Name: v.Name,
+			Label: v.Name,
+			Value: v.ParentID,
 			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
@@ -47,8 +51,10 @@ func getMenu(pid int, path string) []*TreeList {
 			Pid: v.ParentID,
 			Icon: v.Icon,
 		}
+
 		node.Children = child
 		treeList = append(treeList, node)
+
 	}
 
 	return treeList
