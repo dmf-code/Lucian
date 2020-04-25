@@ -43,7 +43,7 @@ func getMenu(pid int, path string) []*TreeList {
 			Id: v.ID,
 			Name: v.Name,
 			Label: v.Name,
-			Value: v.ParentID,
+			Value: uint64(v.ID),
 			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
