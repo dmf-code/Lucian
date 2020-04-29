@@ -11,4 +11,5 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/mojocn/base64Captcha v1.3.0
 	github.com/casbin/casbin v1.9.1
+	golang.org/x/crypto v0.0.0-20200427165652-729f1e841bcc
 )

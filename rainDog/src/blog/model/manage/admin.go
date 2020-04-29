@@ -9,8 +9,8 @@ import (
 
 type Admin struct {
 	model.BaseModel
-	Username string `gorm:"column:username;size:32;not null;" json:"username" form: "username"`			// 用户名
-	Password string `gorm:"column:password;size:32;not null;" json:"password" form: "password"`			// 密码
+	Username string `gorm:"column:username;size:32;not null;unique_index;" json:"username" form: "username"`			// 用户名
+	Password string `gorm:"column:password;size:32;not null;" json:"password" form: "password"`							// 密码
 }
 
 func (Admin) TableName()string {

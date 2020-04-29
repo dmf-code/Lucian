@@ -17,8 +17,12 @@ func Success(ctx *gin.Context, data interface{}, args ...interface{}) {
 }
 
 func Fail(ctx *gin.Context, data interface{})  {
-	ctx.JSON(http.StatusBadRequest, gin.H{"status": false, "data": data})
+	ctx.JSON(http.StatusOK, gin.H{"status": false, "data": data})
 	ctx.Abort()
+}
+
+func Bad(ctx *gin.Context, data interface{}) {
+	ctx.JSON(http.StatusBadRequest, gin.H{"response": data})
 }
 
 // 丢弃BindJSON这种臃肿的获取值模式，采用灵活的MAP
