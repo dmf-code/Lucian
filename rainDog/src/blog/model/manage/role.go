@@ -13,6 +13,7 @@ type Role struct {
 	Memo 		string	`gorm:"column:memo;size:64;" json:"memo" form:"memo"`					// 备注
 	Sequence	string	`gorm:"column:sequence;not null;" json:"sequence" form:"sequence"`		// 排序值
 	ParentId	uint64	`gorm:"column:parent_id;not null;" json:"parent_id" form:"parent_id"`	// 父级ID
+	Users 		[]Admin
 }
 
 func (Role) TableName() string {

@@ -1,11 +1,18 @@
 package admin
 
 import (
+	"blog/model/auth"
 	"blog/model/manage"
+	"blog/utils/collection"
 	"blog/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
+
+type Row struct {
+	Username	string
+	Role		string
+}
 
 func Index(ctx *gin.Context) {
 	db := helper.Db()
@@ -14,6 +21,17 @@ func Index(ctx *gin.Context) {
 		helper.Fail(ctx, "查询失败")
 		return
 	}
+	var rows []Row
+	db.Table("admin").
+		Select("admin.username, role.name").
+		Joins("left join admin_role on admin_role.admin_id = admin.id").
+		Joins("left join role on role.id = admin_role.role_id").
+		Find(&rows)
+	fmt.Println("start")
+	fmt.Println(rows)
+	c := collection.CollectStruct(rows, manage.Admin{})
+	c.GroupBy("1")
+	fmt.Println("end")
 	fmt.Println(fields)
 	helper.Success(ctx, fields)
 }
@@ -30,17 +48,11 @@ func Show(ctx *gin.Context) {
 }
 
 func Store(ctx *gin.Context) {
-	db := helper.Db()
-	var field manage.Admin
-	err := ctx.Bind(&field)
-	fmt.Println(field)
-	if err != nil {
-		helper.Fail(ctx, "绑定数据失败")
-		return
-	}
-	if err = db.Table("admin").Create(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
-		return
+
+	status := auth.Register(ctx)
+
+	if !status {
+		helper.Fail(ctx, "fail")
 	}
 
 	helper.Success(ctx, "success")
