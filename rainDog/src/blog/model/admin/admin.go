@@ -3,7 +3,6 @@ package admin
 import (
 	"blog/model/auth"
 	"blog/model/manage"
-	"blog/utils/collection"
 	"blog/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -29,10 +28,12 @@ func Index(ctx *gin.Context) {
 		Find(&rows)
 	fmt.Println("start")
 	fmt.Println(rows)
-	c := collection.CollectStruct(rows, manage.Admin{})
-	c.GroupBy("1")
-	fmt.Println("end")
-	fmt.Println(fields)
+	list := make(map[string][]string)
+	for k, v := range rows {
+		fmt.Println(k)
+		fmt.Println(v)
+		list[v.Username] = append(list[v.Username], v.Role)
+	}
 	helper.Success(ctx, fields)
 }
 

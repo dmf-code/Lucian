@@ -2,42 +2,30 @@ package collection
 
 import (
 	"fmt"
-)
-
-const (
-	CIntArray 	 = iota
-	CString
-	CStringArray
-	CMap
-	CMapArray
-	CStructArray
+	"reflect"
 )
 
 type Collection struct {
 	value interface{}
-	cType interface{}
 }
 
-func Collect(obj interface{}, cType int) Collection {
+func Collect(obj interface{}) Collection {
 	return Collection{
 		value: obj,
-		cType: cType,
-	}
-}
-
-func CollectStruct(obj interface{}, cType interface{}) Collection {
-	return Collection{
-		value: obj,
-		cType: cType,
 	}
 }
 
 func (c Collection) GroupBy(k string) Collection {
 	//var d = make(map[string]interface{}, 0)
-	fmt.Println(c.cType)
-	//fmt.Println(c.value.(c.cType))
-	for {
-		fmt.Println(c.value)
+	elements := reflect.ValueOf(c.value)
+	for i:=0; i < elements.Len(); i++ {
+		element := elements.Index(i)
+		fmt.Println(element)
+		fmt.Println(element.Type())
+		fmt.Println(element.Kind())
+		fmt.Println(element.NumField())
+		fmt.Println(element.FieldByName(k))
+		fmt.Println(element.FieldByName(k).String())
 	}
 	return c
 }
