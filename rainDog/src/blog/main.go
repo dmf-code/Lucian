@@ -63,11 +63,12 @@ func Migration() {
 }
 
 func table() {
-	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Menu)).Error)
-	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Role)).Error)
-	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.Admin)).Error)
-	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.RoleMenu)).Error)
-	fmt.Println(mysqlTools.GetInstance().GetMysqlDB().AutoMigrate(new(manage.AdminRole)).Error)
+	db := mysqlTools.GetInstance().GetMysqlDB().Set("gorm:table_options", "ENGINE=InnoDB")
+	fmt.Println(db.AutoMigrate(new(manage.Menu)).Error)
+	fmt.Println(db.AutoMigrate(new(manage.Role)).Error)
+	fmt.Println(db.AutoMigrate(new(manage.Admin)).Error)
+	fmt.Println(db.AutoMigrate(new(manage.RoleMenu)).Error)
+	fmt.Println(db.AutoMigrate(new(manage.AdminRole)).Error)
 	if os.Getenv("INIT_ADMIN_TABLE") == "true" {
 		row()
 	}

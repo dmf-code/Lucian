@@ -10,30 +10,38 @@ import (
 
 type Row struct {
 	Username	string
-	Role		string
+	RoleIds		string
+}
+
+type AdminRole struct {
+	manage.Admin
+	RoleIds string `json:"role_ids"`
 }
 
 func Index(ctx *gin.Context) {
 	db := helper.Db()
-	var fields []manage.Admin
+	var fields []AdminRole
 	if err := db.Table("admin").Select("id,username").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
 	}
 	var rows []Row
 	db.Table("admin").
-		Select("admin.username, role.name").
+		Select("admin.username, group_concat(admin_role.role_id) as role_ids").
 		Joins("left join admin_role on admin_role.admin_id = admin.id").
-		Joins("left join role on role.id = admin_role.role_id").
+		Group("admin.username").
 		Find(&rows)
 	fmt.Println("start")
 	fmt.Println(rows)
-	list := make(map[string][]string)
-	for k, v := range rows {
-		fmt.Println(k)
-		fmt.Println(v)
-		list[v.Username] = append(list[v.Username], v.Role)
+
+	for k, v := range fields {
+		for _, vv := range rows {
+			if v.Username == vv.Username {
+				fields[k].RoleIds = vv.RoleIds
+			}
+		}
 	}
+
 	helper.Success(ctx, fields)
 }
 
@@ -50,7 +58,7 @@ func Show(ctx *gin.Context) {
 
 func Store(ctx *gin.Context) {
 
-	status := auth.Register(ctx)
+	status := auth.Register(ctx, true)
 
 	if !status {
 		helper.Fail(ctx, "fail")

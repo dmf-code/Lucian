@@ -9,11 +9,10 @@ import (
 
 type Role struct {
 	model.BaseModel
-	Name		string	`gorm:"column:name;size:32;not null;" json:"name" form:"name"`			// 名称
-	Memo 		string	`gorm:"column:memo;size:64;" json:"memo" form:"memo"`					// 备注
-	Sequence	string	`gorm:"column:sequence;not null;" json:"sequence" form:"sequence"`		// 排序值
-	ParentId	uint64	`gorm:"column:parent_id;not null;" json:"parent_id" form:"parent_id"`	// 父级ID
-	Users 		[]Admin
+	Name		string	`gorm:"column:name;size:32;not null;" json:"name" form:"name"`						// 名称
+	Memo 		string	`gorm:"column:memo;size:64;" json:"memo" form:"memo"`								// 备注
+	Sequence	uint64	`gorm:"column:sequence;not null;default: 5;" json:"sequence" form:"sequence"`		// 排序值
+	ParentId	uint64	`gorm:"column:parent_id;not null;" json:"parent_id" form:"parent_id"`				// 父级ID
 }
 
 func (Role) TableName() string {

@@ -29,6 +29,8 @@ func RegisterApi(c *gin.Context) {
 	if captcha.VerifyCaptchaHandler(Id, VerifyValue) == false {
 			helper.Fail(c,  "验证码不正确")
 	}
-	auth.Register(c)
+	if !auth.Register(c, false) {
+		helper.Fail(c, "注册失败")
+	}
 	helper.Success(c, "注册成功")
 }
