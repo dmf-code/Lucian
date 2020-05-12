@@ -1,7 +1,6 @@
 package main
 
 import (
-	"blog/middleware"
 	"blog/model/manage"
 	"blog/routes"
 	"blog/utils/helper"
@@ -12,50 +11,7 @@ import (
 	"io"
 	"log"
 	"os"
-	"strings"
 )
-
-func setupRouter() *gin.Engine {
-
-	// Disable Console Color
-	// gin.DisableConsoleColor()
-	r := gin.Default()
-	r = routes.Groups(r)
-
-	front := r.Group("/front")
-	{
-		front.GET("ping", func(context *gin.Context) {
-			helper.Success(context, "pong")
-		})
-		routes.Front(front)
-	}
-
-
-	backend := r.Group("/backend")
-	backend.Use(middleware.AccessTokenMiddleware())
-
-	{
-		backend.GET("ping", func(context *gin.Context) {
-			helper.Success(context, "pong")
-		})
-		backend.GET("env", func(context *gin.Context) {
-			envString := os.Environ()
-			var envs map[string]string
-			contains := []string{"APPDATA", "COMPUTERNAME", "GO111MODULE", "GOPATH", "GOPROXY", "GOROOT", "OS", "USER", "USERNAME"}
-			envs = make(map[string]string)
-			for i := 0; i < len(envString); i++ {
-				tmp := strings.Split(envString[i], "=")
-				if helper.InArray(tmp[0], contains) {
-					envs[tmp[0]] = tmp[1]
-				}
-			}
-			helper.Success(context, envs)
-		})
-		routes.Backend(backend)
-	}
-
-	return r
-}
 
 func Migration() {
 	table()
@@ -172,7 +128,7 @@ func main() {
 	secretKey := os.Getenv("SECRET_KEY")
 	fmt.Println(secretKey)
 
-	r := setupRouter()
+	r := routes.SetupRouter()
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8081")
 }

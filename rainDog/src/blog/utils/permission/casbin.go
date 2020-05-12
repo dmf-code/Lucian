@@ -52,6 +52,7 @@ func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
 			fmt.Println(err)
 		}
 
+		//
 		if menu.Type == 3 {
 			enforcer.AddPermissionForUser(
 				PrefixRoleId+strconv.FormatInt(int64(roleId), 10),
