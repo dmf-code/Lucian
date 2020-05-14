@@ -6,6 +6,8 @@ import (
 	"blog/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"strings"
 )
 
 type Row struct {
@@ -67,13 +69,38 @@ func Store(ctx *gin.Context) {
 	helper.Success(ctx, "success")
 }
 
-func Update(ctx *gin.Context) {
+func updateAdmin(filed manage.Admin, requestJson map[string]interface{}) error {
 	db := helper.Db()
+	return db.Transaction(func(tx *gorm.DB) error {
+		delete(requestJson, "password")
+		delete(requestJson, "createdAt")
+		delete(requestJson, "updatedAt")
+		if err := tx.Table("admin").Model(&filed).Updates(requestJson).Error; err != nil {
+			return err
+		}
+		if err := tx.Table("admin_role").Where("admin_id = ?", filed.ID).Delete(manage.AdminRole{}).Error; err != nil {
+			return err
+		}
+
+		roleIds := strings.Split(requestJson["role_ids"].(string), ",")
+		fmt.Println(roleIds)
+		for _, v := range roleIds {
+			if err := tx.Table("admin_role").Create(&manage.AdminRole{AdminId: uint64(filed.ID), RoleId: uint64(helper.Str2Uint(v))}).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+func Update(ctx *gin.Context) {
 	var filed manage.Admin
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
-	if err := db.Table("admin").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+
+	if err := updateAdmin(filed, requestJson); err != nil {
+		fmt.Println(err)
+		helper.Fail(ctx, "更新失败")
 		return
 	}
 
