@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"app/model/manage"
+	"app/bootstrap/Table"
 	"app/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -22,7 +22,7 @@ type TreeList struct {
 }
 
 func getMenu(pid int, path string) []*TreeList {
-	var menus []manage.Menu
+	var menus []Table.Menu
 	if pid == 0 {
 		helper.Db().
 			Table("menu").
@@ -62,7 +62,7 @@ func getMenu(pid int, path string) []*TreeList {
 
 func Index(ctx *gin.Context) {
 	db := helper.Db()
-	var fields []manage.Menu
+	var fields []Table.Menu
 	if err := db.Table("menu").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
@@ -72,7 +72,7 @@ func Index(ctx *gin.Context) {
 }
 
 func Show(ctx *gin.Context) {
-	var field manage.Menu
+	var field Table.Menu
 	if err := helper.Db().Table("menu").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
@@ -82,7 +82,7 @@ func Show(ctx *gin.Context) {
 }
 
 func Store(ctx *gin.Context) {
-	var field manage.Menu
+	var field Table.Menu
 	err := ctx.Bind(&field)
 	fmt.Println(field)
 	if err != nil {
@@ -99,7 +99,7 @@ func Store(ctx *gin.Context) {
 }
 
 func Update(ctx *gin.Context) {
-	var filed manage.Menu
+	var filed Table.Menu
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := helper.Db().Table("menu").Model(&filed).Updates(requestJson).Error; err != nil {
@@ -111,7 +111,7 @@ func Update(ctx *gin.Context) {
 }
 
 func Destroy(ctx *gin.Context) {
-	var field manage.Menu
+	var field Table.Menu
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := helper.Db().Table("menu").Delete(&field).Error; err != nil {
 		helper.Fail(ctx, err.Error())

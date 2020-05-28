@@ -1,7 +1,7 @@
 package adminRole
 
 import (
-	"app/model/manage"
+	"app/bootstrap/Table"
 	"app/utils/format"
 	"app/utils/helper"
 	"fmt"
@@ -78,7 +78,7 @@ func Store(ctx *gin.Context) {
 
 	adminId := helper.Float64ToInt(requestJson["admin_id"].(float64))
 
-	db.Unscoped().Where("admin_id = ?", adminId).Delete(&manage.AdminRole{})
+	db.Unscoped().Where("admin_id = ?", adminId).Delete(&Table.AdminRole{})
 
 	roleIdStr := requestJson["role_id"].(string)
 	roleIds := strings.Split(roleIdStr, ",")
@@ -105,7 +105,7 @@ func Store(ctx *gin.Context) {
 
 func Update(ctx *gin.Context) {
 	db := helper.Db()
-	var filed manage.AdminRole
+	var filed Table.AdminRole
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("admin_role").Model(&filed).Updates(requestJson).Error; err != nil {
@@ -118,7 +118,7 @@ func Update(ctx *gin.Context) {
 
 func Destroy(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.AdminRole
+	var field Table.AdminRole
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("admin_role").Unscoped().Delete(&field).Error; err != nil {
 		helper.Fail(ctx, err.Error())

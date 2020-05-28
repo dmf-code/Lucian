@@ -1,7 +1,7 @@
 package roleMenu
 
 import (
-	"app/model/manage"
+	"app/bootstrap/Table"
 	"app/utils/format"
 	"app/utils/helper"
 	"fmt"
@@ -63,7 +63,7 @@ func Index(ctx *gin.Context) {
 
 func Show(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.RoleMenu
+	var field Table.RoleMenu
 	if err := db.Table("role_menu").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
@@ -104,7 +104,7 @@ func Store(ctx *gin.Context) {
 
 func Update(ctx *gin.Context) {
 	db := helper.Db()
-	var filed manage.RoleMenu
+	var filed Table.RoleMenu
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role_menu").Model(&filed).Updates(requestJson).Error; err != nil {
@@ -117,7 +117,7 @@ func Update(ctx *gin.Context) {
 
 func Destroy(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.RoleMenu
+	var field Table.RoleMenu
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role_menu").Unscoped().Delete(&field).Error; err != nil {
 		helper.Fail(ctx, err.Error())

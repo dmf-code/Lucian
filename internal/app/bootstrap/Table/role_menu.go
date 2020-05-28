@@ -1,4 +1,4 @@
-package manage
+package Table
 
 import (
 	"app/model"
@@ -9,8 +9,8 @@ import (
 
 type RoleMenu struct {
 	model.BaseModel
-	RoleId	uint64	`gorm:"column:role_id;unique_index:uk_role_menu_role_id;not null;"`		// 角色ID
-	MenuId	uint64	`gorm:"column:menu_id;unique_index:uk_role_menu_role_id;not null;"`		// 菜单ID
+	RoleId	uint64	`gorm:"column:role_id;unique_index:uk_role_menu_role_id;not null;comment:'角色ID'"`
+	MenuId	uint64	`gorm:"column:menu_id;unique_index:uk_role_menu_role_id;not null;comment:'菜单ID'"`
 }
 
 func (RoleMenu) TableName() string {

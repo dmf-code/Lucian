@@ -9,11 +9,11 @@ import (
 
 type Article struct {
 	model.BaseModel
-	MdCode		string `json:"mdCode" gorm:"column:md_code;"`
-	HtmlCode	string `json:"htmlCode" gorm:"html_code;"`
-	Title		string `json:"title"`
-	CategoryIds string `json:"categoryIds" gorm:"column:category_ids;"`
-	TagIds		string `json:"tagIds" gorm:"column:tag_ids;"`
+	MdCode		string `json:"mdCode" gorm:"column:md_code;comment:'markdown代码'"`
+	HtmlCode	string `json:"htmlCode" gorm:"column:html_code;comment:'html代码'"`
+	Title		string `json:"title" gorm:"column:title;comment:'标题'"`
+	CategoryIds string `json:"categoryIds" gorm:"column:category_ids;comment:'分类id'"`
+	TagIds		string `json:"tagIds" gorm:"column:tag_ids;comment:'标签id'"`
 }
 
 

@@ -1,4 +1,4 @@
-package manage
+package Table
 
 import (
 	"app/model"
@@ -9,8 +9,8 @@ import (
 
 type AdminRole struct {
 	model.BaseModel
-	AdminId		uint64	`gorm:"column:admin_id;unique_index:uk_admin_role_admin_id;not null;'"`		// 管理员ID
-	RoleId		uint64	`gorm:"column:role_id;unique_index:uk_admin_role_admin_id;not null;"`		// 角色ID
+	AdminId		uint64	`gorm:"column:admin_id;unique_index:uk_admin_role_admin_id;not null;comment='管理员ID'"`
+	RoleId		uint64	`gorm:"column:role_id;unique_index:uk_admin_role_admin_id;not null;comment='角色ID'"`
 }
 
 // 表名

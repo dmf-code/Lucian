@@ -1,8 +1,8 @@
 package admin
 
 import (
+	"app/bootstrap/Table"
 	"app/model/auth"
-	"app/model/manage"
 	"app/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ type Row struct {
 }
 
 type AdminRole struct {
-	manage.Admin
+	Table.Admin
 	RoleIds string `json:"role_ids"`
 }
 
@@ -49,7 +49,7 @@ func Index(ctx *gin.Context) {
 
 func Show(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.Admin
+	var field Table.Admin
 	if err := db.Table("admin").Select("id,username").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
@@ -69,7 +69,7 @@ func Store(ctx *gin.Context) {
 	helper.Success(ctx, "success")
 }
 
-func updateAdmin(filed manage.Admin, requestJson map[string]interface{}) error {
+func updateAdmin(filed Table.Admin, requestJson map[string]interface{}) error {
 	db := helper.Db()
 	return db.Transaction(func(tx *gorm.DB) error {
 		delete(requestJson, "password")
@@ -78,14 +78,14 @@ func updateAdmin(filed manage.Admin, requestJson map[string]interface{}) error {
 		if err := tx.Table("admin").Model(&filed).Updates(requestJson).Error; err != nil {
 			return err
 		}
-		if err := tx.Table("admin_role").Where("admin_id = ?", filed.ID).Delete(manage.AdminRole{}).Error; err != nil {
+		if err := tx.Table("admin_role").Where("admin_id = ?", filed.ID).Delete(Table.AdminRole{}).Error; err != nil {
 			return err
 		}
 
 		roleIds := strings.Split(requestJson["role_ids"].(string), ",")
 		fmt.Println(roleIds)
 		for _, v := range roleIds {
-			if err := tx.Table("admin_role").Create(&manage.AdminRole{AdminId: uint64(filed.ID), RoleId: uint64(helper.Str2Uint(v))}).Error; err != nil {
+			if err := tx.Table("admin_role").Create(&Table.AdminRole{AdminId: uint64(filed.ID), RoleId: uint64(helper.Str2Uint(v))}).Error; err != nil {
 				return err
 			}
 		}
@@ -94,7 +94,7 @@ func updateAdmin(filed manage.Admin, requestJson map[string]interface{}) error {
 }
 
 func Update(ctx *gin.Context) {
-	var filed manage.Admin
+	var filed Table.Admin
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 
@@ -109,7 +109,7 @@ func Update(ctx *gin.Context) {
 
 func Destroy(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.Admin
+	var field Table.Admin
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("admin").Delete(&field).Error; err != nil {
 		helper.Fail(ctx, err.Error())

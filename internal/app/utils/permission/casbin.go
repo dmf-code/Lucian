@@ -1,7 +1,7 @@
 package permission
 
 import (
-	"app/model/manage"
+	"app/bootstrap/Table"
 	"app/utils/helper"
 	"fmt"
 	"github.com/casbin/casbin"
@@ -23,7 +23,7 @@ func Init() {
 		fmt.Println(err)
 	}
 
-	var roles []manage.Role
+	var roles []Table.Role
 	db := helper.Db()
 	if err = db.Table("role").Find(&roles).Error; err != nil {
 		fmt.Println(err)
@@ -42,12 +42,12 @@ func Init() {
 
 // 设置角色权限
 func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
-	var roleMenus []manage.RoleMenu
-	if err := db.Model(&manage.RoleMenu{RoleId: roleId}).Find(&roleMenus).Error; err != nil {
+	var roleMenus []Table.RoleMenu
+	if err := db.Model(&Table.RoleMenu{RoleId: roleId}).Find(&roleMenus).Error; err != nil {
 		fmt.Println(err)
 	}
 	for _, roleMenu := range roleMenus {
-		var menu manage.Menu
+		var menu Table.Menu
 		if err := db.Table("menu").Where("id = ?", roleMenu.MenuId).First(&menu).Error; err != nil {
 			fmt.Println(err)
 		}
@@ -79,9 +79,9 @@ func AddRoleForUser(userId uint64) (err error) {
 	uid := PrefixUserId + strconv.FormatInt(int64(userId), 10)
 
 	Enforcer.DeleteRolesForUser(uid)
-	var adminRoles []manage.AdminRole
+	var adminRoles []Table.AdminRole
 	db := helper.Db()
-	if err = db.Table("admin_role").Model(&manage.AdminRole{AdminId: userId}).Find(&adminRoles).Error; err != nil {
+	if err = db.Table("admin_role").Model(&Table.AdminRole{AdminId: userId}).Find(&adminRoles).Error; err != nil {
 		return
 	}
 	for _, adminRole := range adminRoles {

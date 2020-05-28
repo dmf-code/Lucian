@@ -1,4 +1,4 @@
-package manage
+package Table
 
 import (
 	"app/model"
@@ -9,10 +9,10 @@ import (
 
 type Role struct {
 	model.BaseModel
-	Name		string	`gorm:"column:name;size:32;not null;" json:"name" form:"name"`						// 名称
-	Memo 		string	`gorm:"column:memo;size:64;" json:"memo" form:"memo"`								// 备注
-	Sequence	uint64	`gorm:"column:sequence;not null;default: 5;" json:"sequence" form:"sequence"`		// 排序值
-	ParentId	uint64	`gorm:"column:parent_id;not null;" json:"parent_id" form:"parent_id"`				// 父级ID
+	Name		string	`gorm:"column:name;size:32;not null;comment:'名称'" json:"name" form:"name"`
+	Memo 		string	`gorm:"column:memo;size:64;comment:'备注'" json:"memo" form:"memo"`
+	Sequence	uint64	`gorm:"column:sequence;not null;default: 5;comment:'排序值'" json:"sequence" form:"sequence"`
+	ParentId	uint64	`gorm:"column:parent_id;not null;comment:'父级ID'" json:"parent_id" form:"parent_id"`
 }
 
 func (Role) TableName() string {

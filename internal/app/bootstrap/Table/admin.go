@@ -1,4 +1,4 @@
-package manage
+package Table
 
 import (
 	"app/model"
@@ -9,8 +9,8 @@ import (
 
 type Admin struct {
 	model.BaseModel
-	Username string `gorm:"column:username;size:32;not null;unique_index;" json:"username" form: "username"`			// 用户名
-	Password string `gorm:"column:password;size:128;not null;" json:"password" form: "password"`							// 密码
+	Username string `gorm:"column:username;size:32;not null;unique_index; comment:'用户名';" json:"username" form: "username"`
+	Password string `gorm:"column:password;size:128;not null;" json:"password; comment:'密码';" form: "password"`
 }
 
 func (Admin) TableName()string {

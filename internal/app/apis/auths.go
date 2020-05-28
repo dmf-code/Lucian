@@ -5,14 +5,11 @@ import (
 	"app/utils/captcha"
 	"app/utils/helper"
 	"app/utils/token"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
 func LoginApi(c *gin.Context) {
 	user, status := auth.Login(c)
-	fmt.Println(status)
-	fmt.Println(user)
 	newToken, _ := token.CreateToken([]byte(helper.Env("SECRET_KEY")), c.GetHeader("Origin"), user.ID, true)
 
 	if !status {

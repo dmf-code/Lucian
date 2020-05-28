@@ -1,7 +1,7 @@
 package role
 
 import (
-	"app/model/manage"
+	"app/bootstrap/Table"
 	"app/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -9,7 +9,7 @@ import (
 
 func Index(ctx *gin.Context) {
 	db := helper.Db()
-	var fields []manage.Role
+	var fields []Table.Role
 	if err := db.Table("role").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
@@ -20,7 +20,7 @@ func Index(ctx *gin.Context) {
 
 func Show(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.Role
+	var field Table.Role
 	if err := db.Table("role").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
@@ -31,7 +31,7 @@ func Show(ctx *gin.Context) {
 
 func Store(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.Role
+	var field Table.Role
 	err := ctx.Bind(&field)
 	fmt.Println(field)
 	if err != nil {
@@ -48,7 +48,7 @@ func Store(ctx *gin.Context) {
 
 func Update(ctx *gin.Context) {
 	db := helper.Db()
-	var filed manage.Role
+	var filed Table.Role
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role").Model(&filed).Updates(requestJson).Error; err != nil {
@@ -61,7 +61,7 @@ func Update(ctx *gin.Context) {
 
 func Destroy(ctx *gin.Context) {
 	db := helper.Db()
-	var field manage.Role
+	var field Table.Role
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role").Delete(&field).Error; err != nil {
 		helper.Fail(ctx, err.Error())

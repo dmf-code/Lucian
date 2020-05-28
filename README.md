@@ -45,6 +45,19 @@ EnforceSafe 检查权限 (bool, error)
 不同的角色拥有不同的权限，如果不请求接口进行渲染的话，我们就不知道哪些是他应该渲染出来的菜单。所以这里还是
 需要请求接口的形式，让前端动态渲染界面。
 
+
+### .env文件初始配置
+```text
+SECRET_KEY=YOURSECRETKEYGOESHERE # 密码盐字段
+USER=root # 数据库用户
+PASSWORD=root # 数据库密码
+IP=192.168.3.9 # 数据库ip
+PORT=9003 # 数据库端口
+DBNAME=rain_dog # 数据库名称
+TOKEN_EXPIRE_TIME=1024 # token过期时间，单位小时
+INIT_ADMIN_TABLE=true # 第一次填写true初始化表数据，之后改为false
+```
+
 ### 参考项目
 ```text
 https://github.com/it234/goapp
