@@ -6,6 +6,7 @@ import (
 	"app/utils/helper"
 	"app/utils/mysqlTools"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"os"
 )
 
@@ -83,6 +84,19 @@ func InitTableData() {
 
 	child = Table.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "addTag", Name: "添加", Sequence: 5, Type: 4, Component: "@/views/admin/pages/tag/Add", Icon: "", OperateType: "view"}
 	helper.Db().Create(&child)
+
+	// 管理员账号生成
+	password, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
+	account := Table.Admin{Username: "admin", Password: string(password)}
+	helper.Db().Create(&account)
+
+	// 管理员角色生成
+	role := Table.Role{Name: "admin", Sequence: 5, Memo: "超级管理员"}
+	helper.Db().Create(&role)
+
+	// 账号角色关联
+	account2role := Table.AdminRole{AdminId: uint64(account.ID), RoleId: uint64(role.ID)}
+	helper.Db().Create(&account2role)
 }
 
 

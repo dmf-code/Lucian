@@ -12,7 +12,7 @@ type Role struct {
 	Name		string	`gorm:"column:name;size:32;not null;comment:'名称'" json:"name" form:"name"`
 	Memo 		string	`gorm:"column:memo;size:64;comment:'备注'" json:"memo" form:"memo"`
 	Sequence	uint64	`gorm:"column:sequence;not null;default: 5;comment:'排序值'" json:"sequence" form:"sequence"`
-	ParentId	uint64	`gorm:"column:parent_id;not null;comment:'父级ID'" json:"parent_id" form:"parent_id"`
+	//ParentId	uint64	`gorm:"column:parent_id;not null;comment:'父级ID'" json:"parent_id" form:"parent_id"`
 }
 
 func (Role) TableName() string {
