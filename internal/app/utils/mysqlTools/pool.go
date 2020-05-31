@@ -46,6 +46,10 @@ func (m *MysqlPool) InitDataPool() (status bool) {
 	// 查看interactive_timeout 和 wait_timeout 的值
 	// 设置成和这两个值一致
 	db.DB().SetConnMaxLifetime(time.Second * 120)
+
+	// 不要默认创建数据表添加s后缀
+	db.SingularTable(true)
+
 	fmt.Println(errorDb)
 	if errorDb != nil {
 		log.Fatal(errorDb)
