@@ -3,6 +3,7 @@ package middleware
 import (
 	"app/bootstrap/Table"
 	"app/utils/helper"
+	"app/utils/permission"
 	"app/utils/token"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -18,9 +19,16 @@ func AccessTokenMiddleware() gin.HandlerFunc{
 			var user Table.Admin
 			db := helper.Db()
 			uid := token.GetIdFromClaims("uid", data)
-			fmt.Println(data)
 			db.Table("admin").Where("id = ?", uid).First(&user)
 			fmt.Println(user)
+			// 角色权限验证
+			fmt.Println(uid)
+			fmt.Println(c.Request.RequestURI)
+			fmt.Println(c.Request.Method)
+			if _, err := permission.CheckPermission(uid, c.Request.RequestURI, c.Request.Method); err != nil {
+				c.JSON(http.StatusUnauthorized, gin.H{"message": "角色不具有该路径访问权限"})
+				return
+			}
 			c.Next()
 		} else {
 			// 验证不通过，不再调用后续的函数处理

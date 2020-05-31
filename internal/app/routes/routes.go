@@ -24,7 +24,6 @@ func SetupRouter() *gin.Engine {
 	// gin.DisableConsoleColor()
 	r := gin.Default()
 	r = Groups(r)
-
 	front := r.Group("/front")
 	{
 		front.GET("ping", func(context *gin.Context) {

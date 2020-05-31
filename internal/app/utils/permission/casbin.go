@@ -105,6 +105,25 @@ func DeleteRole(roleIds []int) {
 
 // 检查用户是否拥有权限
 func CheckPermission(userId, url, method string) (bool, error) {
+	row := helper.Db().Table("admin_role").
+		Where("admin_role.admin_id = ?", userId).
+		Joins("left join role on admin_role.role_id = role.id").
+		Select("role.name").
+		Row()
+	var name string
+	err := row.Scan(&name)
+	if err != nil {
+		fmt.Println(err)
+		return false, err
+	}
+	fmt.Println("name start")
+	fmt.Println(name)
+	fmt.Println("name end")
+
+	if name == "super_admin" {
+		return true, nil
+	}
+
 	return Enforcer.EnforceSafe(PrefixUserId + userId, url, method)
 }
 

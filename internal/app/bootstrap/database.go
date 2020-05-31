@@ -91,7 +91,7 @@ func InitTableData() {
 	helper.Db().Create(&account)
 
 	// 管理员角色生成
-	role := Table.Role{Name: "admin", Sequence: 5, Memo: "超级管理员"}
+	role := Table.Role{Name: "super_admin", Sequence: 5, Memo: "超级管理员"}
 	helper.Db().Create(&role)
 
 	// 账号角色关联
