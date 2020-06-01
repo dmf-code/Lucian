@@ -20,12 +20,24 @@ func AccessTokenMiddleware() gin.HandlerFunc{
 			db := helper.Db()
 			uid := token.GetIdFromClaims("uid", data)
 			db.Table("admin").Where("id = ?", uid).First(&user)
-			fmt.Println(user)
+			c.Set("user", user)
+
+			row := helper.Db().Table("admin_role").
+				Where("admin_role.admin_id = ?", uid).
+				Joins("left join role on admin_role.role_id = role.id").
+				Select("role.id, role.name").
+				Row()
+			var roleName string
+			var roleId int
+			err := row.Scan(&roleId, &roleName)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			c.Set("roleId", roleId)
+			c.Set("roleName", roleName)
 			// 角色权限验证
-			fmt.Println(uid)
-			fmt.Println(c.Request.RequestURI)
-			fmt.Println(c.Request.Method)
-			if _, err := permission.CheckPermission(uid, c.Request.RequestURI, c.Request.Method); err != nil {
+			if _, err := permission.CheckPermission(uid, roleName, c.Request.RequestURI, c.Request.Method); err != nil {
 				c.JSON(http.StatusUnauthorized, gin.H{"message": "角色不具有该路径访问权限"})
 				return
 			}

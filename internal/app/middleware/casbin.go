@@ -1,28 +1,25 @@
 package middleware
 
 import (
-	"app/utils/helper"
-	"app/utils/permission"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"strconv"
 	"strings"
 )
 
 // 权限中间间
-func CasbinMiddleware(userId int, path string, method string) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		if b, err := permission.CheckPermission(strconv.Itoa(userId), path, method); err != nil {
-			fmt.Println(err)
-			helper.Fail(ctx, "error")
-			return
-		} else if !b {
-			helper.Fail(ctx, "没有访问权限")
-			return
-		}
-		ctx.Next()
-	}
-}
+//func CasbinMiddleware(userId int, path string, method string) gin.HandlerFunc {
+//	return func(ctx *gin.Context) {
+//		if b, err := permission.CheckPermission(strconv.Itoa(userId), path, method); err != nil {
+//			fmt.Println(err)
+//			helper.Fail(ctx, "error")
+//			return
+//		} else if !b {
+//			helper.Fail(ctx, "没有访问权限")
+//			return
+//		}
+//		ctx.Next()
+//	}
+//}
 
 // 定义中间件跳过函数
 type SkipperFunc func(*gin.Context) bool

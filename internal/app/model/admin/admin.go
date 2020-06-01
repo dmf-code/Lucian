@@ -19,11 +19,23 @@ type AdminRole struct {
 	Table.Admin
 	RoleIds string `json:"role_ids"`
 }
+//// 添加之前
+//func (m *AdminRole) BeforeCreate(scope *gorm.Scope) error {
+//	m.CreatedAt = format.JSONTime{Time: time.Now()}
+//	m.UpdatedAt = format.JSONTime{Time: time.Now()}
+//	return nil
+//}
+//
+//// 更新之前
+//func (m *AdminRole) BeforeUpdate(scope *gorm.Scope) error {
+//	m.UpdatedAt = format.JSONTime{Time: time.Now()}
+//	return nil
+//}
 
 func Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []AdminRole
-	if err := db.Table("admin").Select("id,username").Find(&fields).Error; err != nil {
+	if err := db.Table("admin").Select("id,username,created_at,updated_at").Find(&fields).Error; err != nil {
 		helper.Fail(ctx, "查询失败")
 		return
 	}

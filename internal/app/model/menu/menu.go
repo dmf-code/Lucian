@@ -60,6 +60,42 @@ func getMenu(pid int, path string) []*TreeList {
 	return treeList
 }
 
+func getPermission(pid int, path string) []*TreeList {
+	var menus []Table.Menu
+	if pid == 0 {
+		helper.Db().
+			Table("menu").
+			Where("parent_id = ?", pid).
+			Order("sequence").
+			Find(&menus)
+	} else {
+		helper.Db().Table("menu").Where("parent_id = ?", pid).Order("sequence").Find(&menus)
+	}
+	var treeList []*TreeList
+	for _, v := range menus {
+		child := getMenu(int(v.ID), v.Url)
+		node := &TreeList{
+			Id: v.ID,
+			Name: v.Name,
+			Label: v.Name,
+			Value: uint64(v.ID),
+			Component: v.Component,
+			Sequence: v.Sequence,
+			Url: v.Url,
+			FullUrl: path + "/" + v.Url,
+			Pid: v.ParentID,
+			Icon: v.Icon,
+		}
+
+		node.Children = child
+		treeList = append(treeList, node)
+
+	}
+
+	return treeList
+}
+
+
 func Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Table.Menu
@@ -123,5 +159,10 @@ func Destroy(ctx *gin.Context) {
 
 func List(ctx *gin.Context) {
 	treeList := getMenu(0, "")
+	helper.Success(ctx, treeList)
+}
+
+func FullList(ctx *gin.Context)  {
+	treeList := getPermission(0, "")
 	helper.Success(ctx, treeList)
 }

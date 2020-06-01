@@ -4,6 +4,7 @@ import (
 	"app/bootstrap"
 	"app/routes"
 	"app/utils/mysqlTools"
+	"app/utils/permission"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -12,13 +13,7 @@ import (
 	"os"
 )
 
-func Migration() {
-	bootstrap.InitTable()
-}
-
-
-func main() {
-
+func init()  {
 	// 配置日志
 	f, _ := os.Create("gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
@@ -35,9 +30,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	// 迁移数据
-	Migration()
+	// 权限初始化
+	permission.Init()
 
+	// 迁移数据
+	bootstrap.InitTable()
+
+}
+
+func main() {
 	secretKey := os.Getenv("SECRET_KEY")
 	fmt.Println(secretKey)
 

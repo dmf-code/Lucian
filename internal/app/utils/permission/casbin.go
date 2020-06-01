@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/casbin/casbin"
 	"github.com/jinzhu/gorm"
+	"os"
 	"strconv"
 )
 
@@ -18,20 +19,21 @@ var Enforcer *casbin.Enforcer
 
 func Init() {
 
-	enforcer, err := casbin.NewEnforcerSafe("conf/rbac_model.conf")
+	workPath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(workPath)
+	enforcer, err := casbin.NewEnforcerSafe(workPath + string(os.PathSeparator) + "conf/rbac_model.conf")
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	var roles []Table.Role
 	db := helper.Db()
 	if err = db.Table("role").Find(&roles).Error; err != nil {
 		fmt.Println(err)
 	}
-
-	if len(roles) == 0 {
-		Enforcer = enforcer
-	}
+	fmt.Println(roles)
 
 	for _, role := range roles {
 		setRolePermission(db, enforcer, uint64(role.ID))
@@ -104,23 +106,9 @@ func DeleteRole(roleIds []int) {
 }
 
 // 检查用户是否拥有权限
-func CheckPermission(userId, url, method string) (bool, error) {
-	row := helper.Db().Table("admin_role").
-		Where("admin_role.admin_id = ?", userId).
-		Joins("left join role on admin_role.role_id = role.id").
-		Select("role.name").
-		Row()
-	var name string
-	err := row.Scan(&name)
-	if err != nil {
-		fmt.Println(err)
-		return false, err
-	}
-	fmt.Println("name start")
-	fmt.Println(name)
-	fmt.Println("name end")
+func CheckPermission(userId, roleName, url, method string) (bool, error) {
 
-	if name == "super_admin" {
+	if roleName == "super_admin" {
 		return true, nil
 	}
 

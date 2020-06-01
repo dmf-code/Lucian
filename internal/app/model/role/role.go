@@ -5,6 +5,8 @@ import (
 	"app/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"strings"
 )
 
 func Index(ctx *gin.Context) {
@@ -32,14 +34,29 @@ func Show(ctx *gin.Context) {
 func Store(ctx *gin.Context) {
 	db := helper.Db()
 	var field Table.Role
-	err := ctx.Bind(&field)
-	fmt.Println(field)
+	requestJson := helper.GetRequestJson(ctx)
+	field.Memo = requestJson["memo"].(string)
+	field.Name = requestJson["name"].(string)
+	menuIds := strings.Split(requestJson["menus"].(string), ",")
+	roleId, _ := ctx.Get("roleId")
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Table("role").Create(&field).Error; err != nil {
+			return err
+		}
+		for menuId, _ := range menuIds {
+			err := tx.Table("role_menu").Create(&Table.RoleMenu{
+				RoleId: uint64(roleId.(int)),
+				MenuId: uint64(menuId),
+			}).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 	if err != nil {
-		helper.Fail(ctx, "绑定数据失败")
-		return
-	}
-	if err = db.Table("role").Create(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		helper.Fail(ctx, "failed")
 		return
 	}
 
@@ -51,8 +68,31 @@ func Update(ctx *gin.Context) {
 	var filed Table.Role
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
-	if err := db.Table("role").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+	filed.Name = requestJson["name"].(string)
+	filed.Memo = requestJson["memo"].(string)
+	menuIds := strings.Split(requestJson["menus"].(string), ",")
+	roleId, _ := ctx.Get("roleId")
+	fmt.Println(roleId)
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Table("role").Model(&filed).Update("name", "memo").Error; err != nil {
+			helper.Fail(ctx, err.Error())
+			return err
+		}
+		tx.Where("role_id = ?", filed.ID).Delete(&Table.RoleMenu{})
+		for menuId, _ := range menuIds {
+			err := tx.Table("role_menu").Create(&Table.RoleMenu{
+				RoleId: uint64(filed.ID),
+				MenuId: uint64(menuId),
+			}).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		helper.Fail(ctx, "failed")
 		return
 	}
 

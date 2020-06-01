@@ -126,3 +126,15 @@ func Destroy(ctx *gin.Context) {
 
 	helper.Success(ctx, "删除成功")
 }
+
+func List(ctx *gin.Context) {
+	db := helper.Db()
+	var fields []Table.RoleMenu
+	if roleId := ctx.DefaultQuery("roleId", ""); roleId != "" {
+		db = db.Where("roleId = ?", roleId)
+		fmt.Println(roleId)
+	}
+	db.Find(&fields)
+	fmt.Println(fields)
+	helper.Success(ctx, fields)
+}

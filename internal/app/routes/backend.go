@@ -98,6 +98,8 @@ func menuGroup(r *gin.RouterGroup) {
 	r.DELETE("/menu/:id", menu.Destroy)
 
 	r.GET("/menuList", menu.List)
+
+	r.GET("/menuPermissionList", menu.FullList)
 }
 
 func adminRoleGroup(r *gin.RouterGroup) {
@@ -123,6 +125,8 @@ func roleMenuGroup(r *gin.RouterGroup) {
 	r.GET("/roleMenu/:id", roleMenu.Show)
 
 	r.DELETE("/roleMenu/:id", roleMenu.Destroy)
+
+	r.GET("/roleMenuList", roleMenu.List)
 }
 
 
