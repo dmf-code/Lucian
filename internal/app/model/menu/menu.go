@@ -60,7 +60,7 @@ func getMenu(pid int, path string) []*TreeList {
 	return treeList
 }
 
-func getPermission(pid int, path string) []*TreeList {
+func getApi(pid int, path string) []*TreeList {
 	var menus []Table.Menu
 	if pid == 0 {
 		helper.Db().
@@ -162,7 +162,7 @@ func List(ctx *gin.Context) {
 	helper.Success(ctx, treeList)
 }
 
-func FullList(ctx *gin.Context)  {
-	treeList := getPermission(0, "")
+func ApiList(ctx *gin.Context)  {
+	treeList := getApi(0, "")
 	helper.Success(ctx, treeList)
 }

@@ -99,7 +99,7 @@ func menuGroup(r *gin.RouterGroup) {
 
 	r.GET("/menuList", menu.List)
 
-	r.GET("/menuPermissionList", menu.FullList)
+	r.GET("/menuApiList", menu.ApiList)
 }
 
 func adminRoleGroup(r *gin.RouterGroup) {

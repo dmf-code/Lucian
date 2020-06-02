@@ -79,10 +79,10 @@ func Update(ctx *gin.Context) {
 			return err
 		}
 		tx.Where("role_id = ?", filed.ID).Delete(&Table.RoleMenu{})
-		for menuId, _ := range menuIds {
+		for _, menuId := range menuIds {
 			err := tx.Table("role_menu").Create(&Table.RoleMenu{
 				RoleId: uint64(filed.ID),
-				MenuId: uint64(menuId),
+				MenuId: uint64(helper.Str2Uint(menuId)),
 			}).Error
 			if err != nil {
 				return err
