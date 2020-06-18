@@ -3,8 +3,10 @@ package permission
 import (
 	"app/bootstrap/Table"
 	"app/utils/helper"
+	"app/utils/mysqlTools"
 	"fmt"
 	"github.com/casbin/casbin"
+	gormadapter "github.com/casbin/gorm-adapter"
 	"github.com/jinzhu/gorm"
 	"os"
 	"strconv"
@@ -25,7 +27,10 @@ func Init() {
 		panic(err)
 	}
 	fmt.Println(workPath)
-	enforcer, err := casbin.NewEnforcerSafe(workPath + string(os.PathSeparator) + "conf/rbac_model.conf")
+	a := gormadapter.NewAdapter("mysql", mysqlTools.Dsn)
+
+	enforcer, err := casbin.NewEnforcerSafe(workPath + string(os.PathSeparator) + "conf/rbac_model.conf", a)
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -62,7 +67,7 @@ func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
 				url,
 				"GET|POST|PUT|DELETE")
 		}
-
+		fmt.Println(PrefixRoleId+strconv.FormatInt(int64(roleId), 10))
 		fmt.Println(roleId)
 		fmt.Println(url)
 	}
@@ -110,7 +115,7 @@ func DeleteRole(roleIds []int) {
 }
 
 // 检查用户是否拥有权限
-func CheckPermission(userId, roleName, url, method string) (bool, error) {
+func CheckUserPermission(userId, roleName, url, method string) (bool, error) {
 
 	if roleName == "super_admin" {
 		return true, nil
@@ -119,3 +124,11 @@ func CheckPermission(userId, roleName, url, method string) (bool, error) {
 	return Enforcer.EnforceSafe(PrefixUserId + userId, url, method)
 }
 
+func CheckRolePermission(roleId, roleName, url, method string) (bool, error) {
+
+	if roleName == "super_admin" {
+		return true, nil
+	}
+
+	return Enforcer.EnforceSafe(PrefixRoleId + roleId, url, method)
+}

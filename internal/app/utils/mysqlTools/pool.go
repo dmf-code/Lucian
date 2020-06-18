@@ -26,14 +26,17 @@ func GetInstance() *MysqlPool {
 	return instance
 }
 
+var Dsn string
+
 func (m *MysqlPool) InitDataPool() (status bool) {
 	user := os.Getenv("USER")
 	password := os.Getenv("PASSWORD")
 	ip := os.Getenv("IP")
 	port := os.Getenv("PORT")
 	dbName := os.Getenv("DBNAME")
-	str := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, password, ip, port, dbName)
-	fmt.Println(str)
+	Dsn = fmt.Sprintf("%s:%s@(%s:%s)/", user, password, ip, port)
+	str := fmt.Sprintf("%s%s?charset=utf8&parseTime=True&loc=Local", Dsn, dbName)
+
 	db, errorDb = gorm.Open("mysql", str)
 	// SetMaxIdleCons 设置连接池中的最大闲置连接数。
 	db.DB().SetMaxIdleConns(10)
@@ -58,6 +61,13 @@ func (m *MysqlPool) InitDataPool() (status bool) {
 	//关闭数据库，db会被多个goroutine共享，可以不调用
 	// defer db.Close()
 	return true
+}
+
+func (m *MysqlPool) SetDbName(dbName string) (_db *gorm.DB) {
+	_ = os.Setenv("DBNAME", dbName)
+	m.InitDataPool()
+
+	return db
 }
 
 func (m *MysqlPool) GetMysqlDB() (_db *gorm.DB) {
