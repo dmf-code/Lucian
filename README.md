@@ -8,7 +8,7 @@ https://gin-gonic.com/zh-cn/docs/examples/
 ```
 
 ### 起步
-首先进入 `rainDog->src->blog` 路径下
+首先进入 `internal->app` 路径下
 
 ```shell script
 go run main.go
