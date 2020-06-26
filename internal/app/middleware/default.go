@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func AccessTokenMiddleware() gin.HandlerFunc{
@@ -37,12 +38,8 @@ func AccessTokenMiddleware() gin.HandlerFunc{
 			c.Set("roleId", roleId)
 			c.Set("roleName", roleName)
 			// 角色权限验证
-			fmt.Println(uid)
-			fmt.Println(roleId)
-			fmt.Println(roleName)
-			fmt.Println(c.Request.RequestURI)
-			fmt.Println(c.Request.Method)
-			if _, err := permission.CheckRolePermission(string(roleId), roleName, c.Request.RequestURI, c.Request.Method); err != nil {
+			if ok, nErr := permission.CheckRolePermission(strconv.FormatInt(int64(roleId), 10), roleName, c.Request.RequestURI, c.Request.Method); ok != true {
+				fmt.Println(nErr)
 				c.Abort()
 				c.JSON(http.StatusUnauthorized, gin.H{"message": "角色不具有该路径访问权限"})
 				return

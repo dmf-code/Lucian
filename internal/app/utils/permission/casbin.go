@@ -5,9 +5,10 @@ import (
 	"app/utils/helper"
 	"app/utils/mysqlTools"
 	"fmt"
-	"github.com/casbin/casbin"
-	gormadapter "github.com/casbin/gorm-adapter"
+	"github.com/casbin/casbin/v2"
+	gormadapter "github.com/casbin/gorm-adapter/v2"
 	"github.com/jinzhu/gorm"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -27,13 +28,21 @@ func Init() {
 		panic(err)
 	}
 	fmt.Println(workPath)
-	a := gormadapter.NewAdapter("mysql", mysqlTools.Dsn)
 
-	enforcer, err := casbin.NewEnforcerSafe(workPath + string(os.PathSeparator) + "conf/rbac_model.conf", a)
+	a, err := gormadapter.NewAdapter("mysql", mysqlTools.Dsn)
 
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
+		return
 	}
+
+	enforcer, err := casbin.NewEnforcer(workPath + string(os.PathSeparator) + "conf/rbac_model.conf", a)
+
+	if err != nil {
+		panic(err)
+		return
+	}
+	enforcer.EnableLog(true)
 	var roles []Table.Role
 	db := helper.Db()
 	if err = db.Table("role").Find(&roles).Error; err != nil {
@@ -43,6 +52,10 @@ func Init() {
 
 	for _, role := range roles {
 		setRolePermission(db, enforcer, uint64(role.ID))
+	}
+
+	if err = enforcer.LoadPolicy(); err != nil {
+		return
 	}
 
 	Enforcer = enforcer
@@ -61,55 +74,18 @@ func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
 		}
 
 		url := "/backend/" + strings.TrimPrefix(menu.Url, "/")
-		if menu.Type == 3 {
-			enforcer.AddPermissionForUser(
-				PrefixRoleId+strconv.FormatInt(int64(roleId), 10),
-				url,
-				"GET|POST|PUT|DELETE")
+		if menu.Url != "/" && menu.Url != "" {
+			fmt.Println("casbin start")
+			fmt.Println(menu.Url)
+			fmt.Println(url)
+			fmt.Println("casbin end")
+			if ok, err := enforcer.AddPolicy(PrefixRoleId+strconv.FormatInt(int64(roleId), 10), url, "GET|POST|PUT|DELETE"); err != nil {
+				fmt.Println(ok, err.Error())
+			}
 		}
 		fmt.Println(PrefixRoleId+strconv.FormatInt(int64(roleId), 10))
 		fmt.Println(roleId)
 		fmt.Println(url)
-	}
-}
-
-// 重置角色权限
-func resetRolePermission(roleId uint64) {
-	if Enforcer == nil {
-		return
-	}
-	Enforcer.DeletePermissionsForUser(PrefixRoleId + strconv.FormatInt(int64(roleId), 10))
-	setRolePermission(helper.Db(), Enforcer, roleId)
-}
-
-// 设置用户角色之间的关系
-func AddRoleForUser(userId uint64) (err error) {
-	if Enforcer == nil {
-		return
-	}
-	uid := PrefixUserId + strconv.FormatInt(int64(userId), 10)
-
-	Enforcer.DeleteRolesForUser(uid)
-	var adminRoles []Table.AdminRole
-	db := helper.Db()
-	if err = db.Table("admin_role").Model(&Table.AdminRole{AdminId: userId}).Find(&adminRoles).Error; err != nil {
-		return
-	}
-	for _, adminRole := range adminRoles {
-		Enforcer.AddRoleForUser(uid, PrefixRoleId + strconv.FormatInt(int64(adminRole.RoleId), 10))
-	}
-	return
-}
-
-// 删除角色
-func DeleteRole(roleIds []int) {
-	if Enforcer == nil {
-		return
-	}
-
-	for _, roleId := range roleIds  {
-		Enforcer.DeletePermissionsForUser(PrefixRoleId + strconv.FormatInt(int64(roleId), 10))
-		Enforcer.DeleteRole(PrefixRoleId + strconv.FormatInt(int64(roleId), 10))
 	}
 
 }
@@ -120,8 +96,8 @@ func CheckUserPermission(userId, roleName, url, method string) (bool, error) {
 	if roleName == "super_admin" {
 		return true, nil
 	}
-
-	return Enforcer.EnforceSafe(PrefixUserId + userId, url, method)
+	ok, err := Enforcer.Enforce(PrefixUserId + userId, url, method)
+	return ok, err
 }
 
 func CheckRolePermission(roleId, roleName, url, method string) (bool, error) {
@@ -130,5 +106,9 @@ func CheckRolePermission(roleId, roleName, url, method string) (bool, error) {
 		return true, nil
 	}
 
-	return Enforcer.EnforceSafe(PrefixRoleId + roleId, url, method)
+	ok, err := Enforcer.Enforce(PrefixRoleId + roleId, url, method)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return ok, err
 }
