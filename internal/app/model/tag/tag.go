@@ -9,8 +9,8 @@ import (
 
 type Tag struct {
 	model.BaseModel
-	Name string `json:"name" gorm:"column:name;"`
-	Num int `json:"num"  gorm:"column:num;"`
+	Name string `json:"name" gorm:"column:name;comment:'tag name';"`
+	Num int `json:"num"  gorm:"column:num;comment:'tag 使用次数';"`
 }
 
 

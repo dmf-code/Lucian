@@ -3,6 +3,8 @@ package bootstrap
 import (
 	"app/bootstrap/Table"
 	"app/model/article"
+	"app/model/category"
+	"app/model/tag"
 	"app/utils/helper"
 	"app/utils/mysqlTools"
 	"fmt"
@@ -108,6 +110,8 @@ func InitTable() {
 	fmt.Println(db.AutoMigrate(new(Table.RoleMenu)).Error)
 	fmt.Println(db.AutoMigrate(new(Table.AdminRole)).Error)
 	fmt.Println(db.AutoMigrate(new(article.Article)).Error)
+	fmt.Println(db.AutoMigrate(new(tag.Tag)).Error)
+	fmt.Println(db.AutoMigrate(new(category.Category)).Error)
 	if os.Getenv("INIT_ADMIN_TABLE") == "true" {
 		InitTableData()
 	}
