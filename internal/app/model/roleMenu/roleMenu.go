@@ -131,7 +131,7 @@ func List(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Table.RoleMenu
 	if roleId := ctx.DefaultQuery("roleId", ""); roleId != "" {
-		db = db.Where("roleId = ?", roleId)
+		db = db.Table("role_menu").Where("role_id = ?", roleId)
 		fmt.Println(roleId)
 	}
 	db.Find(&fields)
