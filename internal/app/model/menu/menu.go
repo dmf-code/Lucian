@@ -5,6 +5,7 @@ import (
 	"app/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 type TreeList struct {
@@ -13,6 +14,8 @@ type TreeList struct {
 	Pid       	uint64      `json:"pid"`
 	Label		string 		`json:"label"`	//冗余前端字段
 	Value 		uint64		`json:"value"`	//冗余前端字段
+	Status 		string		`json:"status"`
+	Type		uint8 		`json:"type"`
 	Sequence    int         `json:"sequence"`
 	Url      	string      `json:"url"`
 	FullUrl		string		`json:"full_url"`
@@ -44,6 +47,8 @@ func getMenu(pid int, path string) []*TreeList {
 			Name: v.Name,
 			Label: v.Name,
 			Value: uint64(v.ID),
+			Status: strconv.Itoa(int(v.Status)),
+			Type: v.Type,
 			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
