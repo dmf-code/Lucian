@@ -9,11 +9,12 @@ import (
 
 type Article struct {
 	model.BaseModel
-	MdCode		string `json:"mdCode" gorm:"column:md_code;comment:'markdown代码'"`
-	HtmlCode	string `json:"htmlCode" gorm:"column:html_code;comment:'html代码'"`
+	MdCode		string `json:"mdCode" gorm:"type:longtext;column:md_code;comment:'markdown代码'"`
+	HtmlCode	string `json:"htmlCode" gorm:"type:longtext;column:html_code;comment:'html代码'"`
 	Title		string `json:"title" gorm:"column:title;comment:'标题'"`
 	CategoryIds string `json:"categoryIds" gorm:"column:category_ids;comment:'分类id'"`
 	TagIds		string `json:"tagIds" gorm:"column:tag_ids;comment:'标签id'"`
+	Summary		string `json:"summary" gorm:"column:_;comment:'简介'"`
 }
 
 
@@ -24,7 +25,9 @@ func Index(ctx *gin.Context) {
 		helper.Fail(ctx, "查询失败")
 		return
 	}
-
+	for k, v := range fields {
+		fields[k].Summary = helper.SubString(helper.TrimHtml(v.HtmlCode), "...", 0, 120)
+	}
 	helper.Success(ctx, fields)
 }
 

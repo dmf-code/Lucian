@@ -16,6 +16,7 @@ type TreeList struct {
 	Value 		uint64		`json:"value"`	//冗余前端字段
 	Status 		string		`json:"status"`
 	Type		uint8 		`json:"type"`
+	Memo 		string		`json:"memo"`
 	Sequence    int         `json:"sequence"`
 	Url      	string      `json:"url"`
 	FullUrl		string		`json:"full_url"`
@@ -49,6 +50,7 @@ func getMenu(pid int, path string) []*TreeList {
 			Value: uint64(v.ID),
 			Status: strconv.Itoa(int(v.Status)),
 			Type: v.Type,
+			Memo: v.Memo,
 			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
