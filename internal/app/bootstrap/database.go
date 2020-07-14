@@ -5,6 +5,7 @@ import (
 	"app/model/article"
 	"app/model/category"
 	"app/model/tag"
+	"app/model/tutorial"
 	"app/utils/helper"
 	"app/utils/mysqlTools"
 	"fmt"
@@ -112,6 +113,7 @@ func InitTable() {
 	fmt.Println(db.AutoMigrate(new(article.Article)).Error)
 	fmt.Println(db.AutoMigrate(new(tag.Tag)).Error)
 	fmt.Println(db.AutoMigrate(new(category.Category)).Error)
+	fmt.Println(db.AutoMigrate(new(tutorial.CoverTutorial)).Error)
 	if os.Getenv("INIT_ADMIN_TABLE") == "true" {
 		InitTableData()
 	}

@@ -5,7 +5,6 @@ import (
 	"app/utils/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"strconv"
 )
 
 type TreeList struct {
@@ -14,7 +13,7 @@ type TreeList struct {
 	Pid       	uint64      `json:"pid"`
 	Label		string 		`json:"label"`	//冗余前端字段
 	Value 		uint64		`json:"value"`	//冗余前端字段
-	Status 		string		`json:"status"`
+	Status 		int			`json:"status"`
 	Type		uint8 		`json:"type"`
 	Memo 		string		`json:"memo"`
 	Sequence    int         `json:"sequence"`
@@ -48,7 +47,7 @@ func getMenu(pid int, path string) []*TreeList {
 			Name: v.Name,
 			Label: v.Name,
 			Value: uint64(v.ID),
-			Status: strconv.Itoa(int(v.Status)),
+			Status: int(v.Status),
 			Type: v.Type,
 			Memo: v.Memo,
 			Component: v.Component,
@@ -145,6 +144,7 @@ func Update(ctx *gin.Context) {
 	var filed Table.Menu
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	fmt.Println(requestJson)
 	if err := helper.Db().Table("menu").Model(&filed).Updates(requestJson).Error; err != nil {
 		helper.Fail(ctx, err.Error())
 		return
