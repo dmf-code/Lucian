@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"app/bootstrap/Table"
-	"app/utils/helper"
+	"app/library/helper"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -11,7 +11,7 @@ var MigrationCmd = &cobra.Command{
 	Use: "Migration",
 	Short: "系统数据初始化",
 	Run: func(cmd *cobra.Command, args []string) {
-		initTableData()
+		//initTableData()
 	},
 }
 

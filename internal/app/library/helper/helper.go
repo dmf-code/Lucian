@@ -1,7 +1,8 @@
 package helper
 
 import (
-	"app/utils/mysqlTools"
+	"app/library/config"
+	"app/library/database"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -44,7 +45,8 @@ func GetRequestJson(ctx *gin.Context) (requestMap map[string]interface{}) {
 }
 
 func Db() (con *gorm.DB) {
-	return mysqlTools.GetInstance().GetMysqlDB()
+	master := database.NewMySQL(config.RainDog).Master()
+	return master.Write()
 }
 
 func Env(str string) (res string) {

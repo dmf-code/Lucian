@@ -2,7 +2,7 @@ package article
 
 import (
 	"app/model"
-	"app/utils/helper"
+	"app/library/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )

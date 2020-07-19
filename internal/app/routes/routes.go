@@ -3,8 +3,8 @@ package routes
 import (
 	"app/apis"
 	"app/middleware"
-	"app/utils/captcha"
-	"app/utils/helper"
+	"app/library/captcha"
+	"app/library/helper"
 	"github.com/gin-gonic/gin"
 	"os"
 	"strings"

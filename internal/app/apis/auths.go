@@ -2,9 +2,9 @@ package apis
 
 import (
 	"app/model/auth"
-	"app/utils/captcha"
-	"app/utils/helper"
-	"app/utils/token"
+	"app/library/captcha"
+	"app/library/helper"
+	"app/library/token"
 	"github.com/gin-gonic/gin"
 )
 

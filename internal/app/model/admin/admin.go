@@ -3,7 +3,7 @@ package admin
 import (
 	"app/bootstrap/Table"
 	"app/model/auth"
-	"app/utils/helper"
+	"app/library/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

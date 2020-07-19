@@ -2,8 +2,8 @@ package roleMenu
 
 import (
 	"app/bootstrap/Table"
-	"app/utils/format"
-	"app/utils/helper"
+	"app/library/format"
+	"app/library/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"

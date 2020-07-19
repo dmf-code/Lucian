@@ -2,8 +2,8 @@ package permission
 
 import (
 	"app/bootstrap/Table"
-	"app/utils/helper"
-	"app/utils/mysqlTools"
+	"app/library/helper"
+	"app/library/database"
 	"fmt"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v2"
@@ -29,7 +29,7 @@ func Init() {
 	}
 	fmt.Println(workPath)
 
-	a, err := gormadapter.NewAdapter("mysql", mysqlTools.Dsn)
+	a, err := gormadapter.NewAdapter("mysql", database.Dsn)
 
 	if err != nil {
 		panic(err)

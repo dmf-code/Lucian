@@ -1,7 +1,7 @@
 package model
 
 import (
-	"app/utils/format"
+	"app/library/format"
 	"fmt"
 )
 

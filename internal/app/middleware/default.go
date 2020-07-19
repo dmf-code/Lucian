@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"app/bootstrap/Table"
-	"app/utils/helper"
-	"app/utils/permission"
-	"app/utils/token"
+	"app/library/helper"
+	"app/library/permission"
+	"app/library/token"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

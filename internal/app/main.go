@@ -3,8 +3,8 @@ package main
 import (
 	"app/bootstrap"
 	"app/routes"
-	"app/utils/mysqlTools"
-	"app/utils/permission"
+	"app/library/database"
+	"app/library/permission"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -25,8 +25,8 @@ func init()  {
 	}
 
 	// 初始化Mysql连接池
-	if !mysqlTools.GetInstance().InitDataPool() {
-		log.Println("init database mysqlTools failure...")
+	if !database.GetInstance().InitDataPool() {
+		log.Println("init database database failure...")
 		os.Exit(1)
 	}
 

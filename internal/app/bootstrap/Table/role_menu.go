@@ -2,7 +2,7 @@ package Table
 
 import (
 	"app/model"
-	"app/utils/format"
+	"app/library/format"
 	"github.com/jinzhu/gorm"
 	"time"
 )

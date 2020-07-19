@@ -6,13 +6,13 @@ import (
 	"app/model/category"
 	"app/model/tag"
 	"app/model/tutorial"
-	"app/utils/mysqlTools"
+	"app/library/database"
 	"fmt"
 )
 
 
 func InitTable() {
-	db := mysqlTools.GetInstance().GetMysqlDB().Set("gorm:table_options", "ENGINE=InnoDB")
+	db := database.GetInstance().GetMysqlDB().Set("gorm:table_options", "ENGINE=InnoDB")
 	fmt.Println(db.AutoMigrate(new(Table.Menu)).Error)
 	fmt.Println(db.AutoMigrate(new(Table.Role)).Error)
 	fmt.Println(db.AutoMigrate(new(Table.Admin)).Error)

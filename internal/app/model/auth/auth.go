@@ -2,7 +2,7 @@ package auth
 
 import (
 	"app/bootstrap/Table"
-	"app/utils/helper"
+	"app/library/helper"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
