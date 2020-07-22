@@ -2,9 +2,8 @@ package main
 
 import (
 	"app/bootstrap"
-	"app/routes"
-	"app/library/database"
 	"app/library/permission"
+	"app/routes"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -24,11 +23,11 @@ func init()  {
 		log.Fatal("Error loading .env file")
 	}
 
-	// 初始化Mysql连接池
-	if !database.GetInstance().InitDataPool() {
-		log.Println("init database database failure...")
-		os.Exit(1)
-	}
+	//// 初始化Mysql连接池
+	//if !database.GetInstance().InitDataPool() {
+	//	log.Println("init database database failure...")
+	//	os.Exit(1)
+	//}
 
 	// 权限初始化
 	permission.Init()

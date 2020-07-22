@@ -5,6 +5,7 @@ import (
 	"app/middleware"
 	"app/library/captcha"
 	"app/library/helper"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
 	"strings"
@@ -37,6 +38,24 @@ func SetupRouter() *gin.Engine {
 	backend.Use(middleware.AccessTokenMiddleware())
 
 	{
+
+		backend.POST("/upload", func(context *gin.Context) {
+			header, err := context.FormFile("file")
+			if err != nil {
+				//ignore
+			}
+			dst := header.Filename
+			fmt.Println(os.Getwd())
+			workPath, _ := os.Getwd()
+			path := workPath + string(os.PathSeparator) + "storages/upload" + string(os.PathSeparator) + dst
+			// gin 简单做了封装,拷贝了文件流
+			if err := context.SaveUploadedFile(header, path); err != nil {
+				// ignore
+			}
+
+			helper.Success(context, gin.H{"path": path})
+		})
+
 		backend.GET("ping", func(context *gin.Context) {
 			helper.Success(context, "pong")
 		})
