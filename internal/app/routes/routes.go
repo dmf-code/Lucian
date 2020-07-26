@@ -2,9 +2,9 @@ package routes
 
 import (
 	"app/apis"
-	"app/middleware"
 	"app/library/captcha"
 	"app/library/helper"
+	"app/middleware"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -29,6 +29,13 @@ func SetupRouter() *gin.Engine {
 	{
 		front.GET("ping", func(context *gin.Context) {
 			helper.Success(context, "pong")
+		})
+		front.GET("/static/img", func(context *gin.Context) {
+			workPath, _ := os.Getwd()
+			dst := context.Query("url")
+			imgPath := workPath + string(os.PathSeparator) + dst
+			fmt.Println(imgPath)
+			context.File(imgPath)
 		})
 		Front(front)
 	}
