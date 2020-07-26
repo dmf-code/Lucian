@@ -47,13 +47,14 @@ func SetupRouter() *gin.Engine {
 			dst := header.Filename
 			fmt.Println(os.Getwd())
 			workPath, _ := os.Getwd()
-			path := workPath + string(os.PathSeparator) + "storages/upload" + string(os.PathSeparator) + dst
+			imgPath := "storages" + string(os.PathSeparator) + "upload" + string(os.PathSeparator) + dst
+			path := workPath + string(os.PathSeparator) + imgPath
 			// gin 简单做了封装,拷贝了文件流
 			if err := context.SaveUploadedFile(header, path); err != nil {
 				// ignore
 			}
 
-			helper.Success(context, gin.H{"path": path})
+			helper.Success(context, gin.H{"path": imgPath})
 		})
 
 		backend.GET("ping", func(context *gin.Context) {
