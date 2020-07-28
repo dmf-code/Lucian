@@ -142,6 +142,8 @@ func tutorialGroup(r *gin.RouterGroup) {
 	r.GET("/tutorial/:id", tutorial.Show)
 
 	r.DELETE("/tutorial/:id", tutorial.Destroy)
+
+	r.GET("/coverMenuList", tutorial.CoverMenuList)
 }
 
 
