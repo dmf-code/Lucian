@@ -41,7 +41,15 @@ func getMenu(pid int, path string) []*TreeList {
 		if v.Type >= 3 {
 			continue
 		}
-		child := getMenu(int(v.ID), v.Url)
+		var fullPath string
+		if path != "" {
+			fullPath = path + "/" + v.Url
+		} else {
+			fullPath = v.Url
+		}
+
+		child := getMenu(int(v.ID), fullPath)
+
 		node := &TreeList{
 			Id: v.ID,
 			Name: v.Name,
@@ -53,7 +61,7 @@ func getMenu(pid int, path string) []*TreeList {
 			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
-			FullUrl: path + "/" + v.Url,
+			FullUrl: fullPath,
 			Pid: v.ParentID,
 			Icon: v.Icon,
 		}
@@ -79,7 +87,15 @@ func getApi(pid int, path string) []*TreeList {
 	}
 	var treeList []*TreeList
 	for _, v := range menus {
-		child := getMenu(int(v.ID), v.Url)
+
+		var fullPath string
+		if path != "" {
+			fullPath = path + "/" + v.Url
+		} else {
+			fullPath = v.Url
+		}
+
+		child := getMenu(int(v.ID), fullPath)
 		node := &TreeList{
 			Id: v.ID,
 			Name: v.Name,
@@ -88,7 +104,7 @@ func getApi(pid int, path string) []*TreeList {
 			Component: v.Component,
 			Sequence: v.Sequence,
 			Url: v.Url,
-			FullUrl: path + "/" + v.Url,
+			FullUrl: fullPath,
 			Pid: v.ParentID,
 			Icon: v.Icon,
 		}
