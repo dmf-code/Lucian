@@ -129,8 +129,8 @@ func TrimHtml(src string) string {
 func SubString(str, dot string, start, length int) string  {
 	rs := []rune(str)
 	end := start + length
-	if end > len(str) {
-		end = len(str)
+	if end > len(rs) {
+		end = len(rs)
 	}
 	subString := string(rs[start:end])
 	if dot != "" {
