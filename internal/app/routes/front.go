@@ -7,6 +7,7 @@ import (
 
 func Front(r *gin.RouterGroup)  {
 	ArticleGroup(r)
+	tutorialGroup(r)
 }
 
 func ArticleGroup(r *gin.RouterGroup)  {

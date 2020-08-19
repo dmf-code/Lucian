@@ -143,7 +143,7 @@ func tutorialGroup(r *gin.RouterGroup) {
 
 	r.DELETE("/tutorial/:id", tutorial.Destroy)
 
-	r.GET("/coverMenuList", tutorial.CoverMenuList)
+	r.GET("/tutorialList/:pid", tutorial.List)
 }
 
 

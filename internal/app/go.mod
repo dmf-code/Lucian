@@ -19,6 +19,7 @@ require (
 	github.com/mattn/go-sqlite3 v2.0.1+incompatible // indirect
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
 	github.com/mojocn/base64Captcha v1.3.1
+	github.com/mozillazg/go-pinyin v0.18.0
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/afero v1.3.2 // indirect

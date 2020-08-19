@@ -1,16 +1,53 @@
 package tutorial
 
-import "app/model"
+import (
+	"app/library/helper"
+	"github.com/gin-gonic/gin"
+)
 
-type MenuTutorial struct {
-	model.BaseModel
-	Status		uint8	`gorm:"column:status;type:tinyint(1);not null;comment:'状态（1.启用 2.禁用）'" json:"status" form:"status"`
-	Memo		string	`gorm:"column:memo;size:64;comment:'备注'" json:"memo" form:"memo"`
-	ParentID	uint64	`gorm:"column:parent_id;not null;comment:'父级ID'" json:"parent_id" form:"parent_id"`
-	Url			string	`gorm:"column:url;size:72;comment:'菜单URL'" json:"url" form:"url"`
-	Name  		string	`gorm:"column:name;size:32;not null;comment:'菜单名称'" json:"name" form:"name"`
-	Sequence	int		`gorm:"column:sequence;not null;comment:'排序值'" json:"sequence" form:"sequence"`
-	Type		uint8	`gorm:"column:type;type: tinyint(1);not null;comment:'菜单类型 (1.目录 2.菜单 3.按钮 4.接口)'" json:"type" form:"type"`
-	Icon		string	`gorm:"column:icon;size:32;comment:'icon'" json:"icon" form:"icon"`
-	OperateType	string	`gorm:"column:operate_type;size:32;not null;comment:'操作类型 none/add/del/view/update'" json:"operate_type" form:"operate_type"`
+type TreeList struct {
+	Id        	uint        `json:"id"`
+	Name     	string      `json:"name"`
+	Pid       	uint64      `json:"pid"`
+	Type		uint8 		`json:"type"`
+	Icon      	string      `json:"icon"`
+	Label		string 		`json:"label"`	//冗余前端字段
+	Value 		uint64		`json:"value"`	//冗余前端字段
+	Children  	[]*TreeList `json:"children,omitempty"`
+}
+
+func getMenuTree(pid, sid int) []*TreeList {
+	db := helper.Db()
+	var menus []Tutorial
+	if err := db.Table("tutorial").Where("parent_id = ?", pid).Find(&menus).Error; err != nil {
+		panic(err)
+	}
+	var treeList []*TreeList
+	for _, v := range menus {
+		// 筛除非选中节点
+		if pid == 0 && sid != int(v.ID) {
+			continue
+		}
+		child := getMenuTree(int(v.ID), sid)
+		node := &TreeList{
+			Id: v.ID,
+			Name: v.Title,
+			Value: uint64(v.ID),
+			Label: v.Title,
+			Type: uint8(v.Type),
+			Pid: uint64(v.ParentId),
+			Icon: v.Icon,
+		}
+
+		node.Children = child
+		treeList = append(treeList, node)
+	}
+	return treeList
+}
+
+func List(ctx *gin.Context) {
+	t := ctx.Param("pid")
+	sid := helper.Str2Int(t)
+	treeList := getMenuTree(0, sid)
+	helper.Success(ctx, treeList)
 }

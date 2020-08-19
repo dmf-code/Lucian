@@ -93,6 +93,12 @@ func Str2Uint(str string) (b uint) {
 	return
 }
 
+func Str2Int(str string) (b int) {
+	a,_ := strconv.ParseInt(str, 10, 64)
+	b = int(a)
+	return
+}
+
 
 func Float64ToInt(f float64) (res int) {
 	tmp := strconv.FormatFloat(f, 'f', -1, 64)

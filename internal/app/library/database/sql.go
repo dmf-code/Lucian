@@ -31,9 +31,14 @@ type conn struct {
 	*gorm.DB
 	conf    *Config
 }
-
+var dbInstance *DB
 func Open(c *Config) (*DB, error) {
-	db := new(DB)
+
+	if dbInstance != nil {
+		return dbInstance, nil
+	}
+
+	dbInstance = new(DB)
 	d, err := connect(c, c.DSN)
 	if err != nil {
 		return nil, err
@@ -48,10 +53,10 @@ func Open(c *Config) (*DB, error) {
 		r := &conn{DB: d, conf: c}
 		rs = append(rs, r)
 	}
-	db.write = w
-	db.read = rs
-	db.master = &DB{write: db.write}
-	return db, nil
+	dbInstance.write = w
+	dbInstance.read = rs
+	dbInstance.master = &DB{write: dbInstance.write}
+	return dbInstance, nil
 }
 
 func connect(c *Config, dataSourceName string) (*gorm.DB, error) {

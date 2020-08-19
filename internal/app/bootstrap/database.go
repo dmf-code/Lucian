@@ -21,7 +21,7 @@ func InitTable() {
 	fmt.Println(db.AutoMigrate(new(article.Article)).Error)
 	fmt.Println(db.AutoMigrate(new(tag.Tag)).Error)
 	fmt.Println(db.AutoMigrate(new(category.Category)).Error)
-	fmt.Println(db.AutoMigrate(new(tutorial.CoverTutorial)).Error)
-	fmt.Println(db.AutoMigrate(new(tutorial.MenuTutorial)).Error)
+	fmt.Println(db.AutoMigrate(new(tutorial.Tutorial)).Error)
+	//fmt.Println(db.AutoMigrate(new(tutorial.MenuTutorial)).Error)
 	fmt.Println(db.AutoMigrate(new(tutorial.ContentTutorial)).Error)
 }
