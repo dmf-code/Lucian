@@ -14,7 +14,7 @@ type Tutorial struct {
 	Title		string		`json:"title" gorm:"size:64; column:title; unique_index;comment: '标题';"`
 	ParentId	int			`json:"parent_id" gorm:"column:parent_id; comment: '目录根节点';"`
 	Type 		int			`json:"type" gorm:"column:type; comment: '类型：1.目录 2.菜单';"`
-	Icon		string	`gorm:"column:icon;size:32;comment:'icon'" json:"icon" form:"icon"`
+	Icon		string		`json:"icon" gorm:"column:icon;size:32;comment:'icon'" form:"icon"`
 }
 
 func Index(ctx *gin.Context) {
@@ -42,16 +42,22 @@ func Show(ctx *gin.Context) {
 func Store(ctx *gin.Context) {
 	db := helper.Db()
 	var field Tutorial
-	err := ctx.Bind(&field)
+	data := helper.GetRequestJson(ctx)
+	fmt.Println(data)
+	field.Type = helper.Float64ToInt(data["type"].(float64))
+	field.Title = data["title"].(string)
+	field.Icon = data["icon"].(string)
+	field.ParentId = helper.Float64ToInt(data["parent_id"].(float64))
 	fmt.Println(field)
-	htmlCode := ctx.PostForm("htmlCode")
-	mdCode := ctx.PostForm("mdCode")
-	if err != nil {
-		helper.Fail(ctx, "绑定数据失败")
-		return
-	}
-	err = db.Transaction(func(tx *gorm.DB) error {
-		if err = tx.Table("tutorial").Create(&field).Error; err != nil {
+	var content ContentTutorial
+	content.HtmlCode = data["htmlCode"].(string)
+	content.MdCode = data["mdCode"].(string)
+
+	fmt.Println(11111)
+	fmt.Println(content)
+
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Table("tutorial").Create(&field).Error; err != nil {
 			return err
 		}
 
@@ -59,12 +65,7 @@ func Store(ctx *gin.Context) {
 			return nil
 		}
 
-		var content ContentTutorial
-		content.TutorialId = int(field.ID)
-		content.HtmlCode = htmlCode
-		content.MdCode = mdCode
-
-		if  err = tx.Table("content_tutorial").Create(&content).Error; err != nil {
+		if  err := tx.Table("content_tutorial").Create(&content).Error; err != nil {
 			return err
 		}
 		return nil
@@ -82,6 +83,11 @@ func Update(ctx *gin.Context) {
 	var filed Tutorial
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	field.Type = helper.Float64ToInt(requestJson["type"].(float64))
+	field.Title = requestJson["title"].(string)
+	field.Icon = requestJson["icon"].(string)
+	field.ParentId = helper.Float64ToInt(requestJson["parent_id"].(float64))
+
 	if err := db.Table("tutorial").Model(&filed).Updates(requestJson).Error; err != nil {
 		helper.Fail(ctx, err.Error())
 		return

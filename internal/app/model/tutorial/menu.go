@@ -16,7 +16,7 @@ type TreeList struct {
 	Children  	[]*TreeList `json:"children,omitempty"`
 }
 
-func getMenuTree(pid, sid int) []*TreeList {
+func getMenuTree(pid int) []*TreeList {
 	db := helper.Db()
 	var menus []Tutorial
 	if err := db.Table("tutorial").Where("parent_id = ?", pid).Find(&menus).Error; err != nil {
@@ -25,10 +25,7 @@ func getMenuTree(pid, sid int) []*TreeList {
 	var treeList []*TreeList
 	for _, v := range menus {
 		// 筛除非选中节点
-		if pid == 0 && sid != int(v.ID) {
-			continue
-		}
-		child := getMenuTree(int(v.ID), sid)
+		child := getMenuTree(int(v.ID))
 		node := &TreeList{
 			Id: v.ID,
 			Name: v.Title,
@@ -47,7 +44,6 @@ func getMenuTree(pid, sid int) []*TreeList {
 
 func List(ctx *gin.Context) {
 	t := ctx.Param("pid")
-	sid := helper.Str2Int(t)
-	treeList := getMenuTree(0, sid)
+	treeList := getMenuTree(helper.Str2Int(t))
 	helper.Success(ctx, treeList)
 }
