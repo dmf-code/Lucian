@@ -15,6 +15,7 @@ type Tutorial struct {
 	ParentId	int			`json:"parent_id" gorm:"column:parent_id; comment: '目录根节点';"`
 	Type 		int			`json:"type" gorm:"column:type; comment: '类型：1.目录 2.菜单';"`
 	Icon		string		`json:"icon" gorm:"column:icon;size:32;comment:'icon'" form:"icon"`
+	ContentTutorial		ContentTutorial
 }
 
 func Index(ctx *gin.Context) {
@@ -80,16 +81,43 @@ func Store(ctx *gin.Context) {
 
 func Update(ctx *gin.Context) {
 	db := helper.Db()
-	var filed Tutorial
+
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	var field Tutorial
+	field.ID = helper.Str2Uint(ctx.Param("id"))
 	field.Type = helper.Float64ToInt(requestJson["type"].(float64))
-	field.Title = requestJson["title"].(string)
+	field.Title = requestJson["name"].(string)
 	field.Icon = requestJson["icon"].(string)
 	field.ParentId = helper.Float64ToInt(requestJson["parent_id"].(float64))
 
-	if err := db.Table("tutorial").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+	err := db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Table("tutorial").Model(&field).Updates(Tutorial{
+			ParentId: field.ParentId,
+			Title: field.Title,
+			Icon: field.Icon,
+			Type: field.Type,
+		}).Error; err != nil {
+			return err
+		}
+		var content ContentTutorial
+		content.HtmlCode = requestJson["htmlCode"].(string)
+		content.MdCode = requestJson["mdCode"].(string)
+
+		if  err := tx.Table("content_tutorial").
+			Model(&content).
+			Where("tutorial_id = ?", field.ID).
+			Updates(ContentTutorial{
+			MdCode:     content.MdCode,
+			HtmlCode:   content.HtmlCode,
+		}).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		helper.Fail(ctx, err)
 		return
 	}
 

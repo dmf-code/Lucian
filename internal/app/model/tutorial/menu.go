@@ -13,13 +13,15 @@ type TreeList struct {
 	Icon      	string      `json:"icon"`
 	Label		string 		`json:"label"`	//冗余前端字段
 	Value 		uint64		`json:"value"`	//冗余前端字段
+	MdCode		string		`json:"mdCode"`
+	HtmlCode	string		`json:"htmlCode"`
 	Children  	[]*TreeList `json:"children,omitempty"`
 }
 
 func getMenuTree(pid int) []*TreeList {
 	db := helper.Db()
 	var menus []Tutorial
-	if err := db.Table("tutorial").Where("parent_id = ?", pid).Find(&menus).Error; err != nil {
+	if err := db.Preload("ContentTutorial").Where("parent_id = ?", pid).Find(&menus).Error; err != nil {
 		panic(err)
 	}
 	var treeList []*TreeList
@@ -34,6 +36,8 @@ func getMenuTree(pid int) []*TreeList {
 			Type: uint8(v.Type),
 			Pid: uint64(v.ParentId),
 			Icon: v.Icon,
+			MdCode: v.ContentTutorial.MdCode,
+			HtmlCode: v.ContentTutorial.HtmlCode,
 		}
 
 		node.Children = child
@@ -44,6 +48,7 @@ func getMenuTree(pid int) []*TreeList {
 
 func List(ctx *gin.Context) {
 	t := ctx.Param("pid")
+
 	treeList := getMenuTree(helper.Str2Int(t))
 	helper.Success(ctx, treeList)
 }
