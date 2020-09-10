@@ -41,7 +41,12 @@ func main() {
 	secretKey := os.Getenv("SECRET_KEY")
 	fmt.Println(secretKey)
 
-	r := routes.SetupRouter()
+	r,err := routes.SetupRouter()
+
+	if err != nil {
+		panic("初始化路由失败： " + err.Error())
+	}
+
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8081")
 }

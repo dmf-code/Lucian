@@ -3,7 +3,9 @@ package routes
 import (
 	"app/apis"
 	"app/library/captcha"
+	"app/library/go-fs"
 	"app/library/helper"
+	"app/library/uploader"
 	"app/middleware"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -11,20 +13,19 @@ import (
 	"strings"
 )
 
-func Groups(r *gin.Engine) *gin.Engine {
+func Auth(r *gin.Engine) {
 	r.POST("/login", apis.LoginApi)
 	r.POST("/register", apis.RegisterApi)
 	r.POST("/getCaptcha", captcha.GenerateCaptchaHandler)
 	//r.POST("/verifyCaptcha", captcha.VerifyCaptchaHandler)
-	return r
 }
 
-func SetupRouter() *gin.Engine {
+func SetupRouter() (e *gin.Engine, err error) {
 
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
-	r = Groups(r)
+	Auth(r)
 	front := r.Group("/front")
 	{
 		front.GET("ping", func(context *gin.Context) {
@@ -43,26 +44,7 @@ func SetupRouter() *gin.Engine {
 
 	backend := r.Group("/backend")
 	backend.Use(middleware.AccessTokenMiddleware())
-
 	{
-
-		backend.POST("/upload", func(context *gin.Context) {
-			header, err := context.FormFile("file")
-			if err != nil {
-				//ignore
-			}
-			dst := header.Filename
-			fmt.Println(os.Getwd())
-			workPath, _ := os.Getwd()
-			imgPath := "storages" + string(os.PathSeparator) + "upload" + string(os.PathSeparator) + dst
-			path := workPath + string(os.PathSeparator) + imgPath
-			// gin 简单做了封装,拷贝了文件流
-			if err := context.SaveUploadedFile(header, path); err != nil {
-				// ignore
-			}
-
-			helper.Success(context, gin.H{"path": imgPath})
-		})
 
 		backend.GET("ping", func(context *gin.Context) {
 			helper.Success(context, "pong")
@@ -83,5 +65,30 @@ func SetupRouter() *gin.Engine {
 		Backend(backend)
 	}
 
-	return r
+	uploadInstance, err := uploader.New(r, uploader.GatherConfig{
+		Path: fs.StoragePath() + "upload",
+		UrlPrefix: "/common",
+		File: uploader.FileConfig{
+			Path:      "files",
+			MaxSize:   10485760,
+			AllowType: []string{".xls", ".txt"},
+		},
+		Image: uploader.ImageConfig{
+			Path:    "images",
+			MaxSize: 10485760,
+			Thumb: uploader.ThumbConfig{
+				Path:      "thumb",
+				MaxWidth:  300,
+				MaxHeight: 300,
+			},
+		},
+	})
+
+	if err != nil {
+		return &gin.Engine{}, err
+	}
+
+	uploadInstance.Resolve()
+
+	return r, nil
 }

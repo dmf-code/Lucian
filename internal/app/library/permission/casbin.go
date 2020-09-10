@@ -26,7 +26,6 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(workPath)
 
 	a, err := gormadapter.NewAdapter("mysql", os.Getenv("DSN"))
 
@@ -47,7 +46,6 @@ func Init() {
 	if err = db.Table("role").Find(&roles).Error; err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(roles)
 
 	for _, role := range roles {
 		setRolePermission(db, enforcer, uint64(role.ID))
@@ -74,17 +72,10 @@ func setRolePermission(db *gorm.DB, enforcer *casbin.Enforcer, roleId uint64) {
 
 		url := "/backend/" + strings.TrimPrefix(menu.Url, "/")
 		if menu.Url != "/" && menu.Url != "" {
-			fmt.Println("casbin start")
-			fmt.Println(menu.Url)
-			fmt.Println(url)
-			fmt.Println("casbin end")
 			if ok, err := enforcer.AddPolicy(PrefixRoleId+strconv.FormatInt(int64(roleId), 10), url, "GET|POST|PUT|DELETE"); err != nil {
 				fmt.Println(ok, err.Error())
 			}
 		}
-		fmt.Println(PrefixRoleId+strconv.FormatInt(int64(roleId), 10))
-		fmt.Println(roleId)
-		fmt.Println(url)
 	}
 
 }
