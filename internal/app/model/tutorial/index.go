@@ -65,7 +65,7 @@ func Store(ctx *gin.Context) {
 		if field.Type == 1 {
 			return nil
 		}
-
+		content.TutorialId = int(field.ID)
 		if  err := tx.Table("content_tutorial").Create(&content).Error; err != nil {
 			return err
 		}
@@ -86,19 +86,27 @@ func Update(ctx *gin.Context) {
 	var field Tutorial
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	field.Type = helper.Float64ToInt(requestJson["type"].(float64))
-	field.Title = requestJson["name"].(string)
+	field.Title = requestJson["title"].(string)
 	field.Icon = requestJson["icon"].(string)
 	field.ParentId = helper.Float64ToInt(requestJson["parent_id"].(float64))
-
+	if field.Type == 0 {
+		field.Img = requestJson["img"].(string)
+	}
 	err := db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Table("tutorial").Model(&field).Updates(Tutorial{
 			ParentId: field.ParentId,
 			Title: field.Title,
 			Icon: field.Icon,
 			Type: field.Type,
+			Img: field.Img,
 		}).Error; err != nil {
 			return err
 		}
+
+		if field.ParentId == 0 || field.Type == 1 {
+			return nil
+		}
+
 		var content ContentTutorial
 		content.HtmlCode = requestJson["htmlCode"].(string)
 		content.MdCode = requestJson["mdCode"].(string)
