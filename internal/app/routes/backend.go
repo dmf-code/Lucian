@@ -1,23 +1,15 @@
 package routes
 
 import (
-	"app/model/admin"
-	"app/model/adminRole"
-	"app/model/article"
-	"app/model/category"
-	"app/model/menu"
-	"app/model/role"
-	"app/model/roleMenu"
-	"app/model/tag"
-	"app/model/tutorial"
 	"github.com/gin-gonic/gin"
+	"rain/internal/app/model"
 )
 
 func Backend(r *gin.RouterGroup) {
 	categoryGroup(r)
 
 	tagGroup(r)
-	
+
 	articleGroup(r)
 
 	adminGroup(r)
@@ -34,6 +26,7 @@ func Backend(r *gin.RouterGroup) {
 }
 
 func categoryGroup(r *gin.RouterGroup) {
+	category := model.Category{}
 	r.POST("/category", category.Store)
 
 	r.PUT("/category/:id", category.Update)
@@ -44,6 +37,7 @@ func categoryGroup(r *gin.RouterGroup) {
 }
 
 func tagGroup(r *gin.RouterGroup) {
+	tag := model.Tag{}
 	r.POST("/tag", tag.Store)
 
 	r.PUT("/tag/:id", tag.Update)
@@ -54,10 +48,11 @@ func tagGroup(r *gin.RouterGroup) {
 }
 
 func articleGroup(r *gin.RouterGroup) {
+	article := model.Article{}
 	r.POST("/article", article.Store)
-	
+
 	r.PUT("/article/:id", article.Update)
-	
+
 	r.GET("/article", article.Index)
 
 	r.GET("/article/:id", article.Show)
@@ -66,6 +61,7 @@ func articleGroup(r *gin.RouterGroup) {
 }
 
 func adminGroup(r *gin.RouterGroup) {
+	admin := model.Admin{}
 	r.POST("/admin", admin.Store)
 
 	r.PUT("/admin/:id", admin.Update)
@@ -78,6 +74,7 @@ func adminGroup(r *gin.RouterGroup) {
 }
 
 func roleGroup(r *gin.RouterGroup) {
+	role := model.Role{}
 	r.POST("/role", role.Store)
 
 	r.PUT("/role/:id", role.Update)
@@ -90,6 +87,7 @@ func roleGroup(r *gin.RouterGroup) {
 }
 
 func menuGroup(r *gin.RouterGroup) {
+	menu := model.Menu{}
 	r.POST("/menu", menu.Store)
 
 	r.PUT("/menu/:id", menu.Update)
@@ -106,6 +104,7 @@ func menuGroup(r *gin.RouterGroup) {
 }
 
 func adminRoleGroup(r *gin.RouterGroup) {
+	adminRole := model.AdminRole{}
 	r.POST("/adminRole", adminRole.Store)
 
 	r.PUT("/adminRole/:id", adminRole.Update)
@@ -117,8 +116,8 @@ func adminRoleGroup(r *gin.RouterGroup) {
 	r.DELETE("/adminRole/:id", adminRole.Destroy)
 }
 
-
 func roleMenuGroup(r *gin.RouterGroup) {
+	roleMenu := model.RoleMenu{}
 	r.POST("/roleMenu", roleMenu.Store)
 
 	r.PUT("/roleMenu/:id", roleMenu.Update)
@@ -133,6 +132,8 @@ func roleMenuGroup(r *gin.RouterGroup) {
 }
 
 func tutorialGroup(r *gin.RouterGroup) {
+	tutorial := model.Tutorial{}
+	contentTutorial := model.ContentTutorial{}
 	r.POST("/tutorial", tutorial.Store)
 
 	r.PUT("/tutorial/:id", tutorial.Update)
@@ -143,7 +144,5 @@ func tutorialGroup(r *gin.RouterGroup) {
 
 	r.DELETE("/tutorial/:id", tutorial.Destroy)
 
-	r.GET("/tutorialList/:pid", tutorial.List)
+	r.GET("/tutorialList/:pid", contentTutorial.List)
 }
-
-
