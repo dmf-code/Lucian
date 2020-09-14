@@ -8,6 +8,7 @@ import (
 	"os"
 	"rain/internal/app/bootstrap"
 	"rain/internal/app/routes"
+	"rain/library/dog"
 	"rain/library/permission"
 )
 
@@ -22,6 +23,11 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	// 初始化日志
+	dog.InitLogger()
+	defer dog.SugarLogger.Sync()
+
+	dog.SugarLogger.Infof("aaaaaaaaaaaa %d", 1)
 	// 权限初始化
 	permission.Init()
 
@@ -35,5 +41,5 @@ func main() {
 	}
 
 	// Listen and Server in 0.0.0.0:8080
-	r.Run(":8081")
+	r.Run(":8888")
 }

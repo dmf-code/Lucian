@@ -104,7 +104,7 @@ func (m *Role) Update(ctx *gin.Context) {
 			helper.Fail(ctx, err.Error())
 			return err
 		}
-		tx.Table("role_menu").Where("role_id = ?", filed.ID).Delete(&RoleMenu{})
+		tx.Table("role_menu").Where("role_id = ?", filed.ID).Delete(RoleMenu{})
 		for _, menuId := range menuIds {
 			err := tx.Table("role_menu").Create(&RoleMenu{
 				RoleId: uint64(filed.ID),
