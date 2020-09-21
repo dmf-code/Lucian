@@ -37,4 +37,3 @@ func getLogWriter() zapcore.WriteSyncer {
 	}
 	return zapcore.AddSync(lumberJackLogger)
 }
-
