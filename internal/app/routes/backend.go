@@ -71,6 +71,8 @@ func adminGroup(r *gin.RouterGroup) {
 	r.GET("/admin/:id", admin.Show)
 
 	r.DELETE("/admin/:id", admin.Destroy)
+
+	r.PUT("/resetPassword/:id", admin.ResetPassword)
 }
 
 func roleGroup(r *gin.RouterGroup) {

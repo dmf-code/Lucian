@@ -116,6 +116,26 @@ func (m *Admin)  updateAdmin(filed Admin, requestJson map[string]interface{}) er
 	})
 }
 
+func (m *Admin) ResetPassword(ctx *gin.Context) {
+	requestJson := helper.GetRequestJson(ctx)
+	id := helper.Str2Uint(ctx.Param("id"))
+	Password := requestJson["password"]
+	Password2 := requestJson["password2"]
+
+	if Password != Password2 || Password == "" {
+		helper.Fail(ctx, "重置失败，密码不能为空或两次输入不一致")
+		return
+	}
+
+	db := helper.Db()
+
+	if err := db.Table("admin").Where("id = ?", id).Update("password", Password).Error; err != nil {
+		helper.Fail(ctx, err.Error())
+	}
+
+	helper.Success(ctx, "重置成功")
+}
+
 func (m *Admin) Update(ctx *gin.Context) {
 	var filed Admin
 	requestJson := helper.GetRequestJson(ctx)
