@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 	"rain/library/format"
 	"rain/library/helper"
 	"strings"
@@ -119,17 +120,21 @@ func (m *Admin)  updateAdmin(filed Admin, requestJson map[string]interface{}) er
 func (m *Admin) ResetPassword(ctx *gin.Context) {
 	requestJson := helper.GetRequestJson(ctx)
 	id := helper.Str2Uint(ctx.Param("id"))
-	Password := requestJson["password"]
-	Password2 := requestJson["password2"]
+	password := requestJson["password"]
+	password2 := requestJson["password2"]
 
-	if Password != Password2 || Password == "" {
+	if password != password2 || password == "" {
 		helper.Fail(ctx, "重置失败，密码不能为空或两次输入不一致")
 		return
 	}
 
 	db := helper.Db()
-
-	if err := db.Table("admin").Where("id = ?", id).Update("password", Password).Error; err != nil {
+	newPassword, err := bcrypt.GenerateFromPassword([]byte(password.(string)), bcrypt.DefaultCost)
+	if err != nil {
+		helper.Fail(ctx, err.Error())
+		return
+	}
+	if err := db.Table("admin").Where("id = ?", id).Update("password", newPassword).Error; err != nil {
 		helper.Fail(ctx, err.Error())
 	}
 
