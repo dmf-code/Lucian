@@ -89,8 +89,10 @@ func (m *Tutorial) Store(ctx *gin.Context) {
 	field.Type = helper.Float64ToInt(data["type"].(float64))
 	field.Title = data["title"].(string)
 	field.Icon = data["icon"].(string)
-	field.Img = data["img"].(string)
 	field.ParentId = helper.Float64ToInt(data["parent_id"].(float64))
+	if field.ParentId == 0 {
+		field.Img = data["img"].(string)
+	}
 
 	var content ContentTutorial
 
@@ -128,7 +130,7 @@ func (m *Tutorial) Update(ctx *gin.Context) {
 	field.Title = requestJson["title"].(string)
 	field.Icon = requestJson["icon"].(string)
 	field.ParentId = helper.Float64ToInt(requestJson["parent_id"].(float64))
-	if field.Type == 1 {
+	if field.ParentId == 0 {
 		field.Img = requestJson["img"].(string)
 	}
 	err := db.Transaction(func(tx *gorm.DB) error {
