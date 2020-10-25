@@ -1,4 +1,4 @@
-package response
+package resp
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,16 +6,16 @@ import (
 )
 
 type Response struct {
-	Code int
-	Msg	 string
-	Data interface{}
+	Code int `json:"code"`
+	Msg	 string `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 func Error(ctx *gin.Context, code int, msg string, data ...interface{})  {
 	response(ctx, code, msg, data...)
 }
 
-func Success(ctx *gin.Context, code int, msg string, data ...interface{})  {
+func Success(ctx *gin.Context, msg string, data ...interface{})  {
 	response(ctx, 0, msg, data...)
 }
 
@@ -31,4 +31,5 @@ func response(ctx *gin.Context, code int, msg string, data ...interface{}) {
 	}
 
 	ctx.JSON(http.StatusOK, resp)
+	ctx.Abort()
 }

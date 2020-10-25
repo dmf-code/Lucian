@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
 	"rain/library/helper"
+	"rain/library/response"
 	"time"
 )
 
@@ -157,21 +158,21 @@ func (m *Menu) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Menu
 	if err := db.Table("menu").Find(&fields).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, fields)
+	resp.Success(ctx,"ok", fields)
 }
 
 func (m *Menu) Show(ctx *gin.Context) {
 	var field Menu
 	if err := helper.Db().Table("menu").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	resp.Success(ctx, "ok", field)
 }
 
 func (m *Menu) Store(ctx *gin.Context) {
@@ -180,15 +181,15 @@ func (m *Menu) Store(ctx *gin.Context) {
 	fmt.Println(field)
 	if err != nil {
 		fmt.Println(err)
-		helper.Fail(ctx, "绑定数据失败")
+		resp.Error(ctx, 400, "绑定数据失败")
 		return
 	}
 	if err = helper.Db().Table("menu").Create(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "success")
+	resp.Success(ctx, "ok")
 }
 
 func (m *Menu) Update(ctx *gin.Context) {
@@ -197,30 +198,30 @@ func (m *Menu) Update(ctx *gin.Context) {
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	fmt.Println(requestJson)
 	if err := helper.Db().Table("menu").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx, "更新成功")
 }
 
 func (m *Menu) Destroy(ctx *gin.Context) {
 	var field Menu
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := helper.Db().Table("menu").Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx,"删除成功")
 }
 
 func (m *Menu) List(ctx *gin.Context) {
 	treeList := m.getMenu(0, "")
-	helper.Success(ctx, treeList)
+	resp.Success(ctx,  "ok", treeList)
 }
 
 func (m *Menu) ApiList(ctx *gin.Context) {
 	treeList := m.getApi(0, "")
-	helper.Success(ctx, treeList)
+	resp.Success(ctx,  "ok", treeList)
 }

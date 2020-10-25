@@ -11,10 +11,10 @@ import (
 //	return func(ctx *gin.Context) {
 //		if b, err := permission.CheckPermission(strconv.Itoa(userId), path, method); err != nil {
 //			fmt.Println(err)
-//			helper.Fail(ctx, "error")
+//			resp.Error(ctx, "error")
 //			return
 //		} else if !b {
-//			helper.Fail(ctx, "没有访问权限")
+//			resp.Error(ctx, "没有访问权限")
 //			return
 //		}
 //		ctx.Next()

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"rain/library/helper"
+	"rain/library/response"
 )
 
 type ContentTutorial struct {
@@ -46,7 +47,7 @@ func (m *ContentTutorial) List(ctx *gin.Context) {
 	t := ctx.Param("pid")
 
 	treeList := m.getMenuTree(helper.Str2Int(t))
-	helper.Success(ctx, treeList)
+	resp.Success(ctx, "ok", treeList)
 }
 
 type Tutorial struct {
@@ -63,22 +64,22 @@ func (m *Tutorial) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Tutorial
 	if err := db.Table("tutorial").Where("parent_id=?", 0).Find(&fields).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, fields)
+	resp.Success(ctx, "ok", fields)
 }
 
 func (m *Tutorial) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field Tutorial
 	if err := db.Table("tutorial").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	resp.Success(ctx, "ok", field)
 }
 
 func (m *Tutorial) Store(ctx *gin.Context) {
@@ -114,10 +115,10 @@ func (m *Tutorial) Store(ctx *gin.Context) {
 	})
 
 	if err != nil {
-		helper.Fail(ctx, err)
+		resp.Error(ctx, 400, err.Error())
 	}
 
-	helper.Success(ctx, "success")
+	resp.Success(ctx, "success")
 }
 
 func (m *Tutorial) Update(ctx *gin.Context) {
@@ -166,11 +167,11 @@ func (m *Tutorial) Update(ctx *gin.Context) {
 	})
 
 	if err != nil {
-		helper.Fail(ctx, err)
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx, "更新成功")
 }
 
 func (m *Tutorial) Destroy(ctx *gin.Context) {
@@ -178,10 +179,10 @@ func (m *Tutorial) Destroy(ctx *gin.Context) {
 	var field Tutorial
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("tutorial").Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx, "删除成功")
 }
 

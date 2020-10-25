@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"rain/library/helper"
+	"rain/library/response"
 )
 
 type Article struct {
@@ -20,24 +21,24 @@ func (m *Article) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Article
 	if err := db.Table("article").Find(&fields).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 	for k, v := range fields {
 		fields[k].Summary = helper.SubString(helper.TrimHtml(v.HtmlCode), "...", 0, 120)
 	}
-	helper.Success(ctx, fields)
+	resp.Success(ctx, "ok", fields)
 }
 
 func (m *Article) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field Article
 	if err := db.Table("article").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	resp.Success(ctx, "ok", field)
 }
 
 func (m *Article) Store(ctx *gin.Context) {
@@ -46,15 +47,15 @@ func (m *Article) Store(ctx *gin.Context) {
 	err := ctx.Bind(&field)
 	fmt.Println(field)
 	if err != nil {
-		helper.Fail(ctx, "绑定数据失败")
+		resp.Error(ctx, 400, "绑定数据失败")
 		return
 	}
 	if err = db.Table("article").Create(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "success")
+	resp.Success(ctx, "ok")
 }
 
 func (m *Article) Update(ctx *gin.Context) {
@@ -63,11 +64,11 @@ func (m *Article) Update(ctx *gin.Context) {
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("article").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx, "ok")
 }
 
 func (m *Article) Destroy(ctx *gin.Context) {
@@ -75,9 +76,9 @@ func (m *Article) Destroy(ctx *gin.Context) {
 	var field Article
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("article").Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx,"删除成功")
 }

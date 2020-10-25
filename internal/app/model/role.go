@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
 	"rain/library/helper"
+	"rain/library/response"
 	"strings"
 	"time"
 )
@@ -39,22 +40,22 @@ func (m *Role) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Role
 	if err := db.Table("role").Find(&fields).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, fields)
+	resp.Success(ctx, "ok", fields)
 }
 
 func (m *Role) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field Role
 	if err := db.Table("role").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	resp.Success(ctx, "ok", field)
 }
 
 func (m *Role) Store(ctx *gin.Context) {
@@ -82,11 +83,11 @@ func (m *Role) Store(ctx *gin.Context) {
 	})
 
 	if err != nil {
-		helper.Fail(ctx, "failed")
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "success")
+	resp.Success(ctx, "ok")
 }
 
 func (m *Role) Update(ctx *gin.Context) {
@@ -101,7 +102,7 @@ func (m *Role) Update(ctx *gin.Context) {
 	fmt.Println(roleId)
 	err := db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Table("role").Model(&filed).Update("name", "memo").Error; err != nil {
-			helper.Fail(ctx, err.Error())
+			resp.Error(ctx, 400, err.Error())
 			return err
 		}
 		tx.Table("role_menu").Where("role_id = ?", filed.ID).Delete(RoleMenu{})
@@ -118,11 +119,11 @@ func (m *Role) Update(ctx *gin.Context) {
 	})
 
 	if err != nil {
-		helper.Fail(ctx, "failed")
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx, "更新成功")
 }
 
 func (m *Role) Destroy(ctx *gin.Context) {
@@ -130,9 +131,9 @@ func (m *Role) Destroy(ctx *gin.Context) {
 	var field Role
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role").Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx, "删除成功")
 }

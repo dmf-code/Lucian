@@ -5,7 +5,7 @@ import (
 	"rain/internal/app/middleware"
 	"rain/library/captcha"
 	"rain/library/go-fs"
-	"rain/library/helper"
+	"rain/library/response"
 	"rain/library/uploader"
 )
 
@@ -26,7 +26,7 @@ func SetupRouter() (e *gin.Engine, err error) {
 	front := r.Group("/front")
 	{
 		front.GET("ping", func(context *gin.Context) {
-			helper.Success(context, "pong")
+			resp.Success(context, "pong")
 		})
 		Front(front)
 	}
@@ -36,7 +36,7 @@ func SetupRouter() (e *gin.Engine, err error) {
 	{
 
 		backend.GET("ping", func(context *gin.Context) {
-			helper.Success(context, "pong")
+			resp.Success(context, "pong")
 		})
 		Backend(backend)
 	}

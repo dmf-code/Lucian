@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
 	"rain/library/helper"
+	"rain/library/response"
 	"strconv"
 	"strings"
 	"time"
@@ -47,7 +48,7 @@ func (m *AdminRole) Index(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println(err)
-		helper.Fail(ctx, err)
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 	var res []interface{}
@@ -82,18 +83,18 @@ func (m *AdminRole) Index(ctx *gin.Context) {
 		fmt.Println(err)
 	}
 
-	helper.Success(ctx, res, roleIds)
+	resp.Success(ctx, "ok", res, roleIds)
 }
 
 func (m *AdminRole) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []int
 	if err := db.Table("admin_role").Where("admin_id = ?", ctx.Param("id")).Pluck("role_id", &fields).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, fields)
+	resp.Success(ctx, "ok", fields)
 }
 
 func (m *AdminRole) Store(ctx *gin.Context) {
@@ -120,11 +121,11 @@ func (m *AdminRole) Store(ctx *gin.Context) {
 	fmt.Println(sql)
 	if err := db.Exec(sql).Error; err != nil {
 		fmt.Println(err)
-		helper.Fail(ctx, "添加失败")
+		resp.Error(ctx, 400, "添加失败")
 		return
 	}
 
-	helper.Success(ctx, "添加成功")
+	resp.Success(ctx, "添加成功")
 }
 
 func (m *AdminRole) Update(ctx *gin.Context) {
@@ -133,11 +134,11 @@ func (m *AdminRole) Update(ctx *gin.Context) {
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("admin_role").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx,400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx, "更新成功")
 }
 
 func (m *AdminRole) Destroy(ctx *gin.Context) {
@@ -145,9 +146,9 @@ func (m *AdminRole) Destroy(ctx *gin.Context) {
 	var field AdminRole
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("admin_role").Unscoped().Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx,  "删除成功")
 }

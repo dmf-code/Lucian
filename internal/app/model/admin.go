@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"rain/library/format"
 	"rain/library/helper"
+	"rain/library/response"
 	"strings"
 	"time"
 )
@@ -48,7 +49,7 @@ func (m *Admin) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []AdminSon
 	if err := db.Table("admin").Select("id,username,created_at,updated_at").Find(&fields).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 	var rows []Row
@@ -68,18 +69,18 @@ func (m *Admin) Index(ctx *gin.Context) {
 		}
 	}
 
-	helper.Success(ctx, fields)
+	resp.Success(ctx, "ok", fields)
 }
 
 func (m *Admin) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field Admin
 	if err := db.Table("admin").Select("id,username").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	resp.Success(ctx, "ok", field)
 }
 
 func (m *Admin) Store(ctx *gin.Context) {
@@ -87,10 +88,10 @@ func (m *Admin) Store(ctx *gin.Context) {
 	status := auth.Register(ctx, true)
 
 	if !status {
-		helper.Fail(ctx, "fail")
+		resp.Error(ctx, 400, "注册失败")
 	}
 
-	helper.Success(ctx, "success")
+	resp.Success(ctx, "ok")
 }
 
 func (m *Admin)  updateAdmin(filed Admin, requestJson map[string]interface{}) error {
@@ -124,21 +125,21 @@ func (m *Admin) ResetPassword(ctx *gin.Context) {
 	password2 := requestJson["password2"]
 
 	if password != password2 || password == "" {
-		helper.Fail(ctx, "重置失败，密码不能为空或两次输入不一致")
+		resp.Error(ctx, 400, "重置失败，密码不能为空或两次输入不一致")
 		return
 	}
 
 	db := helper.Db()
 	newPassword, err := bcrypt.GenerateFromPassword([]byte(password.(string)), bcrypt.DefaultCost)
 	if err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 	if err := db.Table("admin").Where("id = ?", id).Update("password", newPassword).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 	}
 
-	helper.Success(ctx, "重置成功")
+	resp.Success(ctx, "重置成功")
 }
 
 func (m *Admin) Update(ctx *gin.Context) {
@@ -148,11 +149,11 @@ func (m *Admin) Update(ctx *gin.Context) {
 
 	if err := m.updateAdmin(filed, requestJson); err != nil {
 		fmt.Println(err)
-		helper.Fail(ctx, "更新失败")
+		resp.Error(ctx, 400, "更新失败")
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx,  "更新成功")
 }
 
 func (m *Admin) Destroy(ctx *gin.Context) {
@@ -160,9 +161,9 @@ func (m *Admin) Destroy(ctx *gin.Context) {
 	var field Admin
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("admin").Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx,  "删除成功")
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
 	"rain/library/helper"
+	"rain/library/response"
 	"strconv"
 	"strings"
 	"time"
@@ -46,7 +47,7 @@ func (m *RoleMenu) Index(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println(err)
-		helper.Fail(ctx, err)
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 	var res []interface{}
@@ -81,18 +82,18 @@ func (m *RoleMenu) Index(ctx *gin.Context) {
 		fmt.Println(err)
 	}
 
-	helper.Success(ctx, res, menuIds)
+	resp.Success(ctx, "ok", res, menuIds)
 }
 
 func (m *RoleMenu) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field RoleMenu
 	if err := db.Table("role_menu").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
-		helper.Fail(ctx, "查询失败")
+		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 
-	helper.Success(ctx, field)
+	resp.Success(ctx, "ok", field)
 }
 
 func (m *RoleMenu) Store(ctx *gin.Context) {
@@ -118,11 +119,11 @@ func (m *RoleMenu) Store(ctx *gin.Context) {
 	fmt.Println(sql)
 	if err := db.Exec(sql).Error; err != nil {
 		fmt.Println(err)
-		helper.Fail(ctx, "添加失败")
+		resp.Error(ctx, 400, "添加失败")
 		return
 	}
 
-	helper.Success(ctx, "添加成功")
+	resp.Success(ctx, "添加成功")
 }
 
 func (m *RoleMenu) Update(ctx *gin.Context) {
@@ -131,11 +132,11 @@ func (m *RoleMenu) Update(ctx *gin.Context) {
 	requestJson := helper.GetRequestJson(ctx)
 	filed.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role_menu").Model(&filed).Updates(requestJson).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "更新成功")
+	resp.Success(ctx, "更新成功")
 }
 
 func (m *RoleMenu) Destroy(ctx *gin.Context) {
@@ -143,11 +144,11 @@ func (m *RoleMenu) Destroy(ctx *gin.Context) {
 	var field RoleMenu
 	field.ID = helper.Str2Uint(ctx.Param("id"))
 	if err := db.Table("role_menu").Unscoped().Delete(&field).Error; err != nil {
-		helper.Fail(ctx, err.Error())
+		resp.Error(ctx, 400, err.Error())
 		return
 	}
 
-	helper.Success(ctx, "删除成功")
+	resp.Success(ctx, "删除成功")
 }
 
 func (m *RoleMenu) List(ctx *gin.Context) {
@@ -159,5 +160,5 @@ func (m *RoleMenu) List(ctx *gin.Context) {
 	}
 	db.Find(&fields)
 	fmt.Println(fields)
-	helper.Success(ctx, fields)
+	resp.Success(ctx, "ok", fields)
 }
