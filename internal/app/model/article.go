@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 )
@@ -25,7 +26,7 @@ func (m *Article) Index(ctx *gin.Context) {
 		return
 	}
 	for k, v := range fields {
-		fields[k].Summary = helper.SubString(helper.TrimHtml(v.HtmlCode), "...", 0, 120)
+		fields[k].Summary = str.SubString(str.TrimHtml(v.HtmlCode), "...", 0, 120)
 	}
 	resp.Success(ctx, "ok", fields)
 }
@@ -62,7 +63,7 @@ func (m *Article) Update(ctx *gin.Context) {
 	db := helper.Db()
 	var filed Article
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	filed.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("article").Model(&filed).Updates(requestJson).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return
@@ -74,7 +75,7 @@ func (m *Article) Update(ctx *gin.Context) {
 func (m *Article) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field Article
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("article").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return

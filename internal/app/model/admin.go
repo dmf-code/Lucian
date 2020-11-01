@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"rain/library/format"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 	"strings"
@@ -64,7 +65,7 @@ func (m *Admin) Index(ctx *gin.Context) {
 	for k, v := range fields {
 		for _, vv := range rows {
 			if v.Username == vv.Username {
-				fields[k].RoleIds = uint64(helper.Str2Uint(vv.RoleIds))
+				fields[k].RoleIds = uint64(str.ToUint(vv.RoleIds))
 			}
 		}
 	}
@@ -110,7 +111,7 @@ func (m *Admin)  updateAdmin(filed Admin, requestJson map[string]interface{}) er
 		roleIds := strings.Split(requestJson["role_ids"].(string), ",")
 		fmt.Println(roleIds)
 		for _, v := range roleIds {
-			if err := tx.Table("admin_role").Create(&AdminRole{AdminId: uint64(filed.ID), RoleId: uint64(helper.Str2Uint(v))}).Error; err != nil {
+			if err := tx.Table("admin_role").Create(&AdminRole{AdminId: uint64(filed.ID), RoleId: uint64(str.ToUint(v))}).Error; err != nil {
 				return err
 			}
 		}
@@ -120,7 +121,7 @@ func (m *Admin)  updateAdmin(filed Admin, requestJson map[string]interface{}) er
 
 func (m *Admin) ResetPassword(ctx *gin.Context) {
 	requestJson := helper.GetRequestJson(ctx)
-	id := helper.Str2Uint(ctx.Param("id"))
+	id := str.ToUint(ctx.Param("id"))
 	password := requestJson["password"]
 	password2 := requestJson["password2"]
 
@@ -145,7 +146,7 @@ func (m *Admin) ResetPassword(ctx *gin.Context) {
 func (m *Admin) Update(ctx *gin.Context) {
 	var filed Admin
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	filed.ID = str.ToUint(ctx.Param("id"))
 
 	if err := m.updateAdmin(filed, requestJson); err != nil {
 		fmt.Println(err)
@@ -159,7 +160,7 @@ func (m *Admin) Update(ctx *gin.Context) {
 func (m *Admin) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field Admin
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("admin").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return

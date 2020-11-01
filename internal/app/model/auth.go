@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"strings"
 )
@@ -42,7 +43,7 @@ func CreateUser(username, password, rolesId string, isAdmin bool) error {
 		rolesIdList := strings.Split(rolesId, ",")
 		if isAdmin {
 			for _, v := range rolesIdList {
-				adminRole := AdminRole{AdminId: uint64(admin.ID), RoleId: uint64(helper.Str2Uint(v))}
+				adminRole := AdminRole{AdminId: uint64(admin.ID), RoleId: uint64(str.ToUint(v))}
 				if err := tx.Table("admin_role").Create(&adminRole).Error; err != nil {
 					return err
 				}

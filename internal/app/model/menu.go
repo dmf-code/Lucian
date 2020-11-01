@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 	"time"
@@ -195,7 +196,7 @@ func (m *Menu) Store(ctx *gin.Context) {
 func (m *Menu) Update(ctx *gin.Context) {
 	var filed Menu
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	filed.ID = str.ToUint(ctx.Param("id"))
 	fmt.Println(requestJson)
 	if err := helper.Db().Table("menu").Model(&filed).Updates(requestJson).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
@@ -207,7 +208,7 @@ func (m *Menu) Update(ctx *gin.Context) {
 
 func (m *Menu) Destroy(ctx *gin.Context) {
 	var field Menu
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := helper.Db().Table("menu").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return

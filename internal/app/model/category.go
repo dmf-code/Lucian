@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 )
@@ -57,7 +58,7 @@ func (m *Category) Update(ctx *gin.Context) {
 	db := helper.Db()
 	var filed Category
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	filed.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("category").Model(&filed).Updates(requestJson).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return
@@ -69,7 +70,7 @@ func (m *Category) Update(ctx *gin.Context) {
 func (m *Category) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field Category
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("category").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return

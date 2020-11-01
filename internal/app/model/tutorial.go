@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 )
@@ -15,7 +16,7 @@ type ContentTutorial struct {
 }
 
 
-func (m *ContentTutorial) getMenuTree(pid int) []*TreeList {
+func (m *ContentTutorial) getMenuTree(pid int, isFront bool) []*TreeList {
 	db := helper.Db()
 	var menus []Tutorial
 	if err := db.Preload("ContentTutorial").Where("parent_id = ?", pid).Find(&menus).Error; err != nil {
@@ -24,7 +25,15 @@ func (m *ContentTutorial) getMenuTree(pid int) []*TreeList {
 	var treeList []*TreeList
 	for _, v := range menus {
 		// 筛除非选中节点
-		child := m.getMenuTree(int(v.ID))
+		child := m.getMenuTree(int(v.ID), isFront)
+
+		mdCode := v.ContentTutorial.MdCode
+		htmlCode := v.ContentTutorial.HtmlCode
+		if isFront == true {
+			mdCode = ""
+			htmlCode = ""
+		}
+
 		node := &TreeList{
 			Id:       v.ID,
 			Name:     v.Title,
@@ -33,8 +42,8 @@ func (m *ContentTutorial) getMenuTree(pid int) []*TreeList {
 			Type:     uint8(v.Type),
 			Pid:      uint64(v.ParentId),
 			Icon:     v.Icon,
-			MdCode:   v.ContentTutorial.MdCode,
-			HtmlCode: v.ContentTutorial.HtmlCode,
+			MdCode:   mdCode,
+			HtmlCode: htmlCode,
 		}
 
 		node.Children = child
@@ -45,8 +54,12 @@ func (m *ContentTutorial) getMenuTree(pid int) []*TreeList {
 
 func (m *ContentTutorial) List(ctx *gin.Context) {
 	t := ctx.Param("pid")
+	isFront := true
+	if str.ToBool(ctx.Query("is_front")) == false {
+		isFront = false
+	}
 
-	treeList := m.getMenuTree(helper.Str2Int(t))
+	treeList := m.getMenuTree(str.ToInt(t), isFront)
 	resp.Success(ctx, "ok", treeList)
 }
 
@@ -126,7 +139,7 @@ func (m *Tutorial) Update(ctx *gin.Context) {
 
 	requestJson := helper.GetRequestJson(ctx)
 	var field Tutorial
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	field.Type = helper.Float64ToInt(requestJson["type"].(float64))
 	field.Title = requestJson["title"].(string)
 	field.Icon = requestJson["icon"].(string)
@@ -177,7 +190,7 @@ func (m *Tutorial) Update(ctx *gin.Context) {
 func (m *Tutorial) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field Tutorial
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("tutorial").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return

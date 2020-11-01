@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 	"strings"
@@ -94,7 +95,7 @@ func (m *Role) Update(ctx *gin.Context) {
 	db := helper.Db()
 	var filed Role
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	filed.ID = str.ToUint(ctx.Param("id"))
 	filed.Name = requestJson["name"].(string)
 	filed.Memo = requestJson["memo"].(string)
 	menuIds := strings.Split(requestJson["menus"].(string), ",")
@@ -109,7 +110,7 @@ func (m *Role) Update(ctx *gin.Context) {
 		for _, menuId := range menuIds {
 			err := tx.Table("role_menu").Create(&RoleMenu{
 				RoleId: uint64(filed.ID),
-				MenuId: uint64(helper.Str2Uint(menuId)),
+				MenuId: uint64(str.ToUint(menuId)),
 			}).Error
 			if err != nil {
 				return err
@@ -129,7 +130,7 @@ func (m *Role) Update(ctx *gin.Context) {
 func (m *Role) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field Role
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("role").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return

@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"rain/library/format"
+	"rain/library/go-str"
 	"rain/library/helper"
 	"rain/library/response"
 	"strconv"
@@ -130,7 +131,7 @@ func (m *RoleMenu) Update(ctx *gin.Context) {
 	db := helper.Db()
 	var filed RoleMenu
 	requestJson := helper.GetRequestJson(ctx)
-	filed.ID = helper.Str2Uint(ctx.Param("id"))
+	filed.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("role_menu").Model(&filed).Updates(requestJson).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return
@@ -142,7 +143,7 @@ func (m *RoleMenu) Update(ctx *gin.Context) {
 func (m *RoleMenu) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field RoleMenu
-	field.ID = helper.Str2Uint(ctx.Param("id"))
+	field.ID = str.ToUint(ctx.Param("id"))
 	if err := db.Table("role_menu").Unscoped().Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return
