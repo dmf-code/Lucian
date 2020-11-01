@@ -55,6 +55,7 @@ func (m *ContentTutorial) getMenuTree(pid int, isFront bool) []*TreeList {
 func (m *ContentTutorial) List(ctx *gin.Context) {
 	t := ctx.Param("pid")
 	isFront := true
+
 	if str.ToBool(ctx.Query("is_front")) == false {
 		isFront = false
 	}

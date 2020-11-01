@@ -21,6 +21,7 @@ func ToInt(str string) (b int) {
 
 func ToBool(str string) (b bool) {
 	b, _ = strconv.ParseBool(str)
+
 	return
 }
 
