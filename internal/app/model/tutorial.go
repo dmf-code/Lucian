@@ -200,3 +200,16 @@ func (m *Tutorial) Destroy(ctx *gin.Context) {
 	resp.Success(ctx, "删除成功")
 }
 
+
+func (m *ContentTutorial) Show(ctx *gin.Context) {
+	db := helper.Db()
+	tutorialId := ctx.Param("id")
+
+	var content ContentTutorial
+	if err := db.Table("content_tutorial").Where("tutorial_id = ? ", tutorialId).First(&content).Error; err != nil {
+		resp.Error(ctx, 400, err.Error())
+		return
+	}
+
+	resp.Success(ctx, "ok", content)
+}

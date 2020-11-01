@@ -27,6 +27,8 @@ func frontTutorialGroup(r *gin.RouterGroup) {
 
 	r.GET("/tutorial/:id", tutorial.Show)
 
+	r.GET("/tutorialContent/:id", contentTutorial.Show)
+
 	r.GET("/tutorialList/:pid", contentTutorial.List)
 }
 
