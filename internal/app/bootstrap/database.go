@@ -19,4 +19,5 @@ func InitTable() {
 	fmt.Println(db.AutoMigrate(new(model.Tutorial)).Error)
 	//fmt.Println(db.AutoMigrate(new(tutorial.MenuTutorial)).Error)
 	fmt.Println(db.AutoMigrate(new(model.ContentTutorial)).Error)
+	fmt.Println(db.AutoMigrate(new(model.Nav)).Error)
 }

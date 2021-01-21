@@ -23,6 +23,8 @@ func Backend(r *gin.RouterGroup) {
 	roleMenuGroup(r)
 
 	tutorialGroup(r)
+
+	navGroup(r)
 }
 
 func categoryGroup(r *gin.RouterGroup) {
@@ -147,4 +149,18 @@ func tutorialGroup(r *gin.RouterGroup) {
 	r.DELETE("/tutorial/:id", tutorial.Destroy)
 
 	r.GET("/tutorialList/:pid", contentTutorial.List)
+}
+
+
+func navGroup(r *gin.RouterGroup) {
+	nav := model.Nav{}
+	r.POST("/nav", nav.Store)
+
+	r.PUT("/nav/:id", nav.Update)
+
+	r.GET("/nav", nav.Index)
+
+	r.GET("/nav/:id", nav.Show)
+
+	r.DELETE("/nav/:id", nav.Destroy)
 }

@@ -25,8 +25,9 @@ type TreeList struct {
 	FullUrl   string      `json:"full_url"`
 	Component string      `json:"component"`
 	Icon      string      `json:"icon"`
-	MdCode     string `json:"mdCode" gorm:"type:longtext;column:md_code;comment:'markdown代码'"`
-	HtmlCode   string `json:"htmlCode" gorm:"type:longtext;column:html_code;comment:'html代码'"`
+	MdCode     string 	  `json:"mdCode" gorm:"type:longtext;column:md_code;comment:'markdown代码'"`
+	HtmlCode   string 	  `json:"htmlCode" gorm:"type:longtext;column:html_code;comment:'html代码'"`
+	OperateType string 	  `gorm:"column:operate_type;size:32;not null;comment:'操作类型 none/add/del/view/update'" json:"operate_type" form:"operate_type"`
 	Children  []*TreeList `json:"children,omitempty"`
 }
 
@@ -89,19 +90,20 @@ func (m *Menu) getMenu(pid int, path string) []*TreeList {
 		child := m.getMenu(int(v.ID), fullPath)
 
 		node := &TreeList{
-			Id:        v.ID,
-			Name:      v.Name,
-			Label:     v.Name,
-			Value:     uint64(v.ID),
-			Status:    int(v.Status),
-			Type:      v.Type,
-			Memo:      v.Memo,
-			Component: v.Component,
-			Sequence:  v.Sequence,
-			Url:       v.Url,
-			FullUrl:   fullPath,
-			Pid:       v.ParentID,
-			Icon:      v.Icon,
+			Id:        		v.ID,
+			Name:      		v.Name,
+			Label:     		v.Name,
+			Value:     		uint64(v.ID),
+			Status:    		int(v.Status),
+			Type:      		v.Type,
+			Memo:      		v.Memo,
+			Component: 		v.Component,
+			Sequence:  		v.Sequence,
+			Url:       		v.Url,
+			FullUrl:   		fullPath,
+			Pid:       		v.ParentID,
+			Icon:      		v.Icon,
+			OperateType: 	v.OperateType,
 		}
 
 		node.Children = child
@@ -145,6 +147,7 @@ func (m *Menu) getApi(pid int, path string) []*TreeList {
 			FullUrl:   fullPath,
 			Pid:       v.ParentID,
 			Icon:      v.Icon,
+			OperateType: 	v.OperateType,
 		}
 
 		node.Children = child
