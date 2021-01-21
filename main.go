@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"io"
 	"log"
 	"os"
+	"rain/cmd"
 	"rain/internal/app/bootstrap"
 	"rain/internal/app/routes"
 	"rain/library/dog"
@@ -21,6 +23,17 @@ func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
+	}
+
+	if len(os.Args) > 1 {
+		fmt.Println(os.Args)
+		err = cmd.MigrationCmd.Execute()
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return
 	}
 
 	// 初始化日志
