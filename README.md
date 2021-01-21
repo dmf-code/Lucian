@@ -10,6 +10,14 @@ https://gin-gonic.com/zh-cn/docs/examples/
 ### 起步
 首先进入 `internal->app` 路径下
 
+第一次部署项目需要先初始化数据
+
+```shell script
+go run main.go Migration
+```
+
+这个命令会创建数据表和迁移基础框架数据，默认会创建一个管理员账号 `admin` : `123456`
+
 ```shell script
 go run main.go
 ```

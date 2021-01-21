@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"io"
 	"log"
 	"os"
+	"rain/cmd"
 	"rain/internal/app/bootstrap"
 	"rain/internal/app/routes"
 	"rain/library/dog"
@@ -23,6 +25,23 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	if len(os.Args) > 1 {
+
+		if os.Args[1] == "Migration" {
+
+			// 迁移数据
+			bootstrap.InitTable()
+
+			err = cmd.MigrationCmd.Execute()
+
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+
+		return
+	}
+
 	// 初始化日志
 	dog.InitLogger()
 	defer dog.SugarLogger.Sync()
@@ -30,9 +49,6 @@ func main() {
 	dog.SugarLogger.Infof("aaaaaaaaaaaa %d", 1)
 	// 权限初始化
 	permission.Init()
-
-	// 迁移数据
-	bootstrap.InitTable()
 
 	r, err := routes.SetupRouter()
 
