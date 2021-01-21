@@ -26,11 +26,17 @@ func main() {
 	}
 
 	if len(os.Args) > 1 {
-		fmt.Println(os.Args)
-		err = cmd.MigrationCmd.Execute()
 
-		if err != nil {
-			fmt.Println(err)
+		if os.Args[1] == "Migration" {
+
+			// 迁移数据
+			bootstrap.InitTable()
+
+			err = cmd.MigrationCmd.Execute()
+
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 
 		return
@@ -43,9 +49,6 @@ func main() {
 	dog.SugarLogger.Infof("aaaaaaaaaaaa %d", 1)
 	// 权限初始化
 	permission.Init()
-
-	// 迁移数据
-	bootstrap.InitTable()
 
 	r, err := routes.SetupRouter()
 
