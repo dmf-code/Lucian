@@ -48,7 +48,7 @@ func initTableData() {
 	helper.Db().Create(&father)
 
 	// 权限管理
-	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "权限管理", Sequence: 5, Type: 1, Component: "", Icon: "el-icon-s-operation", OperateType: "none"}
+	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "权限管理", Sequence: 5, Type: 1, Component: "views/admin/Route", Icon: "el-icon-s-operation", OperateType: "none"}
 	helper.Db().Create(&father)
 
 	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "user", Name: "用户", Sequence: 5, Type: 2, Component: "views/admin/pages/user/List", Icon: "", OperateType: "view"}
@@ -61,7 +61,7 @@ func initTableData() {
 	helper.Db().Create(&child)
 
 	// 文章管理
-	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "文章管理", Sequence: 5, Type: 1, Component: "", Icon: "el-icon-s-data", OperateType: "none"}
+	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "文章管理", Sequence: 5, Type: 1, Component: "views/admin/Route", Icon: "el-icon-s-data", OperateType: "none"}
 	helper.Db().Create(&father)
 
 	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "article", Name: "列表", Sequence: 5, Type: 2, Component: "views/admin/pages/article/List", Icon: "", OperateType: "view"}
@@ -71,7 +71,7 @@ func initTableData() {
 	helper.Db().Create(&child)
 
 	// 分类管理
-	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "分类管理", Sequence: 5, Type: 1, Component: "", Icon: "el-icon-menu", OperateType: "none"}
+	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "分类管理", Sequence: 5, Type: 1, Component: "views/admin/Route", Icon: "el-icon-menu", OperateType: "none"}
 	helper.Db().Create(&father)
 
 	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "category", Name: "列表", Sequence: 5, Type: 2, Component: "views/admin/pages/category/List", Icon: "", OperateType: "view"}
@@ -81,7 +81,7 @@ func initTableData() {
 	helper.Db().Create(&child)
 
 	// 标签管理
-	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "标签管理", Sequence: 5, Type: 1, Component: "", Icon: "el-icon-collection-tag", OperateType: "none"}
+	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "", Name: "标签管理", Sequence: 5, Type: 1, Component: "views/admin/Route", Icon: "el-icon-collection-tag", OperateType: "none"}
 	helper.Db().Create(&father)
 
 	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "tag", Name: "列表", Sequence: 5, Type: 2, Component: "views/admin/pages/tag/List", Icon: "", OperateType: "view"}
