@@ -16,7 +16,7 @@ type Article struct {
 	CategoryIds string `json:"categoryIds" gorm:"column:category_ids;comment:'分类id'"`
 	TagIds      string `json:"tagIds" gorm:"column:tag_ids;comment:'标签id'"`
 	Summary     string `json:"summary" gorm:"column:summary;comment:'简介'"`
-	IsHide		int8	`json:"is_hide" gorm:"column:is_hide;comment:'1.不隐藏 2.隐藏'"`
+	IsHide		int8	`json:"is_hide" gorm:"column:is_hide;default: 1;comment:'1.不隐藏 2.隐藏'"`
 }
 
 func (m *Article) Index(ctx *gin.Context) {

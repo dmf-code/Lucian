@@ -100,6 +100,17 @@ func initTableData() {
 	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "add", Name: "添加", Sequence: 5, Type: 4, Component: "views/admin/pages/tutorial/Add", Icon: "", OperateType: "view"}
 	helper.Db().Create(&child)
 
+	// 界面管理
+	father = model.Menu{Status: 1, Memo: "", ParentID: uint64(grandfather.ID), Url: "nav", Name: "界面管理", Sequence: 5, Type: 1, Component: "views/admin/Route", Icon: "el-icon-collection-tag", OperateType: "none"}
+	helper.Db().Create(&father)
+
+	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "list", Name: "列表", Sequence: 5, Type: 2, Component: "views/admin/pages/nav/List", Icon: "", OperateType: "view"}
+	helper.Db().Create(&child)
+
+	child = model.Menu{Status: 1, Memo: "", ParentID: uint64(father.ID), Url: "add", Name: "添加", Sequence: 5, Type: 4, Component: "views/admin/pages/nav/Add", Icon: "", OperateType: "view"}
+	helper.Db().Create(&child)
+
+
 	// 管理员账号生成
 	password, _ := bcrypt.GenerateFromPassword([]byte("123456"), bcrypt.DefaultCost)
 	account := model.Admin{Username: "admin", Password: string(password)}
@@ -112,5 +123,12 @@ func initTableData() {
 	// 账号角色关联
 	account2role := model.AdminRole{AdminId: uint64(account.ID), RoleId: uint64(role.ID)}
 	helper.Db().Create(&account2role)
+
+	// 导航栏数据
+	nav := model.Nav{Name: "梧桐树下", Path: "/"}
+	helper.Db().Create(&nav)
+	nav = model.Nav{Name: "文档中心", Path: "/tutorial"}
+	helper.Db().Create(&nav)
+
 }
 
