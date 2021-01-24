@@ -15,13 +15,14 @@ type Article struct {
 	Title       string `json:"title" gorm:"column:title;comment:'标题'"`
 	CategoryIds string `json:"categoryIds" gorm:"column:category_ids;comment:'分类id'"`
 	TagIds      string `json:"tagIds" gorm:"column:tag_ids;comment:'标签id'"`
-	Summary     string `json:"summary" gorm:"column:_;comment:'简介'"`
+	Summary     string `json:"summary" gorm:"column:summary;comment:'简介'"`
+	IsHide		int8	`json:"is_hide" gorm:"column:is_hide;comment:'1.不隐藏 2.隐藏'"`
 }
 
 func (m *Article) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Article
-	if err := db.Table("article").Find(&fields).Error; err != nil {
+	if err := db.Table("article").Where("is_hide=1").Find(&fields).Error; err != nil {
 		resp.Error(ctx, 400, "查询失败")
 		return
 	}

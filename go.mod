@@ -37,5 +37,4 @@ require (
 	golang.org/x/text v0.3.3 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect
 	gorm.io/gorm v1.20.7 // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
