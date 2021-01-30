@@ -19,6 +19,27 @@ func Success(ctx *gin.Context, msg string, data ...interface{})  {
 	response(ctx, 0, msg, data...)
 }
 
+func Paginate(ctx *gin.Context, msg string, items interface{}, total int, page int, pageSize int) {
+
+	if page == 0 {
+		page = 1
+	}
+
+	switch {
+		case pageSize > 100:
+			pageSize = 100
+		case pageSize <= 0:
+			pageSize = 10
+	}
+
+	paginatorMap := make(map[string]interface{})
+	paginatorMap["items"] = items
+	paginatorMap["total"] = total
+	paginatorMap["page"] = page
+	paginatorMap["page_size"] = pageSize
+	response(ctx, 0, msg, paginatorMap)
+}
+
 func response(ctx *gin.Context, code int, msg string, data ...interface{}) {
 	resp := Response{
 		Code: code,
