@@ -25,7 +25,7 @@ func (m *Article) Index(ctx *gin.Context) {
 	page := ctx.Query("page")
 	pageSize := ctx.Query("page_size")
 	var total int
-	db.Table("article").Count(&total)
+	db.Table("article").Where("is_hide=1").Count(&total)
 	if err := db.Table("article").Where("is_hide=1").Scopes(helper.Paginate(ctx)).Find(&fields).Error; err != nil {
 		resp.Error(ctx, 400, "查询失败")
 		return
