@@ -25,6 +25,8 @@ func Backend(r *gin.RouterGroup) {
 	tutorialGroup(r)
 
 	navGroup(r)
+
+	bookmarkGroup(r)
 }
 
 func categoryGroup(r *gin.RouterGroup) {
@@ -163,4 +165,17 @@ func navGroup(r *gin.RouterGroup) {
 	r.GET("/nav/:id", nav.Show)
 
 	r.DELETE("/nav/:id", nav.Destroy)
+}
+
+func bookmarkGroup(r *gin.RouterGroup) {
+	bookmark := model.Bookmark{}
+	r.POST("/bookmark", bookmark.Store)
+
+	r.PUT("/bookmark/:id", bookmark.Update)
+
+	r.GET("/bookmark", bookmark.Index)
+
+	r.GET("/bookmark/:id", bookmark.Show)
+
+	r.DELETE("/bookmark/:id", bookmark.Destroy)
 }

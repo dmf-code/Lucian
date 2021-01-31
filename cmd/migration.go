@@ -134,12 +134,12 @@ func initTableData() {
 	helper.Db().Create(&account2role)
 
 	nav := model.Nav{Name: "梧桐树下", Path: "/"}
-	helper.Db().Create(nav)
+	helper.Db().Create(&nav)
 
 	nav = model.Nav{Name: "教程文档", Path: "/tutorial"}
-	helper.Db().Create(nav)
+	helper.Db().Create(&nav)
 
 	nav = model.Nav{Name: "书签", Path: "/bookmark"}
-	helper.Db().Create(nav)
+	helper.Db().Create(&nav)
 }
 

@@ -10,6 +10,10 @@ func Front(r *gin.RouterGroup) {
 	frontTutorialGroup(r)
 
 	frontCategoryGroup(r)
+
+	navGroup(r)
+
+	bookmarkGroup(r)
 }
 
 func frontArticleGroup(r *gin.RouterGroup) {
