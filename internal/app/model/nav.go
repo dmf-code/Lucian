@@ -19,7 +19,7 @@ type Nav struct{
 
 
 func (Nav) TableName() string {
-	return TableName("Nav")
+	return TableName("nav")
 }
 
 // 添加之前
@@ -38,7 +38,7 @@ func (m *Nav) BeforeUpdate(scope *gorm.Scope) error {
 func (m *Nav) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Nav
-	nav := db.Table("Nav")
+	nav := db.Table("nav")
 	isHide := ctx.DefaultQuery("is_hide", "none")
 
 	if isHide != "none" {
@@ -56,7 +56,7 @@ func (m *Nav) Index(ctx *gin.Context) {
 func (m *Nav) Show(ctx *gin.Context) {
 	db := helper.Db()
 	var field Nav
-	if err := db.Table("Nav").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
+	if err := db.Table("nav").Where("id = ?", ctx.Param("id")).First(&field).Error; err != nil {
 		resp.Error(ctx, 400, "查询失败")
 		return
 	}
@@ -71,7 +71,7 @@ func (m *Nav) Store(ctx *gin.Context) {
 	field.Path = requestJson["path"].(string)
 	field.Name = requestJson["name"].(string)
 	field.IsHide = helper.Float64ToInt(requestJson["is_hide"].(float64))
-	if err := db.Table("Nav").Create(&field).Error; err != nil {
+	if err := db.Table("nav").Create(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return
 	}
@@ -88,7 +88,7 @@ func (m *Nav) Update(ctx *gin.Context) {
 	field.Path = requestJson["path"].(string)
 	field.IsHide = helper.Float64ToInt(requestJson["is_hide"].(float64))
 
-	if err := db.Table("Nav").Model(&field).Updates(
+	if err := db.Table("nav").Model(&field).Updates(
 		map[string]interface{}{
 			"name": field.Name,
 			"path": field.Path,
@@ -104,7 +104,7 @@ func (m *Nav) Destroy(ctx *gin.Context) {
 	db := helper.Db()
 	var field Nav
 	field.ID = str.ToUint(ctx.Param("id"))
-	if err := db.Table("Nav").Delete(&field).Error; err != nil {
+	if err := db.Table("nav").Delete(&field).Error; err != nil {
 		resp.Error(ctx, 400, err.Error())
 		return
 	}
