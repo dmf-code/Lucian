@@ -22,14 +22,19 @@ type Article struct {
 func (m *Article) Index(ctx *gin.Context) {
 	db := helper.Db()
 	var fields []Article
-	if err := db.Table("article").Where("is_hide=1").Find(&fields).Error; err != nil {
+	page := ctx.Query("page")
+	pageSize := ctx.Query("page_size")
+	var total int
+	db.Table("article").Count(&total)
+	if err := db.Table("article").Where("is_hide=1").Scopes(helper.Paginate(ctx)).Find(&fields).Error; err != nil {
 		resp.Error(ctx, 400, "查询失败")
 		return
 	}
 	for k, v := range fields {
 		fields[k].Summary = str.SubString(str.TrimHtml(v.HtmlCode), "...", 0, 120)
 	}
-	resp.Success(ctx, "ok", fields)
+
+	resp.Paginate(ctx, "ok", fields, total, str.ToInt(page), str.ToInt(pageSize))
 }
 
 func (m *Article) Show(ctx *gin.Context) {
