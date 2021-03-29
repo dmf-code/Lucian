@@ -4,7 +4,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
-	"rain/internal/app/model"
+	"rain/internal/model"
 	"rain/library/helper"
 )
 

@@ -31,5 +31,6 @@ func NewMySQL(c *Config) (db *DB) {
 		log.Fatal("open mysql error(%v)", err)
 		panic(err)
 	}
+
 	return
 }

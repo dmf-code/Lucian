@@ -1,11 +1,10 @@
 package middleware
 
 import (
-
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"rain/internal/app/model"
+	"rain/internal/model"
 	"rain/library/helper"
 	"rain/library/permission"
 	"rain/library/token"

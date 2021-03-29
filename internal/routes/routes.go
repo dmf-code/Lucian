@@ -2,43 +2,35 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"rain/internal/app/middleware"
-	"rain/library/captcha"
+	"rain/internal/handler"
+	"rain/internal/middleware"
 	"rain/library/go-fs"
 	"rain/library/response"
 	"rain/library/uploader"
 )
-
-func Auth(r *gin.Engine) {
-	r.POST("/login", LoginApi)
-	r.POST("/register", RegisterApi)
-	r.POST("/getCaptcha", captcha.GenerateCaptchaHandler)
-	//r.POST("/verifyCaptcha", captcha.VerifyCaptchaHandler)
-}
 
 func SetupRouter() (e *gin.Engine, err error) {
 
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
-	Auth(r)
+	handler.Auth(r)
 
 	front := r.Group("/front")
 	{
 		front.GET("ping", func(context *gin.Context) {
 			resp.Success(context, "pong")
 		})
-		Front(front)
+		handler.FrontHandler(front)
 	}
 
 	backend := r.Group("/backend")
 	backend.Use(middleware.AccessTokenMiddleware())
 	{
-
 		backend.GET("ping", func(context *gin.Context) {
 			resp.Success(context, "pong")
 		})
-		Backend(backend)
+		handler.BackendHandler(backend)
 	}
 
 	uploadInstance, err := uploader.New(r, uploader.GatherConfig{

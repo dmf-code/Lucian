@@ -1,11 +1,11 @@
-package routes
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"rain/internal/app/model"
+	"rain/internal/model"
 )
 
-func Backend(r *gin.RouterGroup) {
+func BackendHandler(r *gin.RouterGroup) {
 	categoryGroup(r)
 
 	tagGroup(r)
@@ -28,6 +28,7 @@ func Backend(r *gin.RouterGroup) {
 
 	bookmarkGroup(r)
 }
+
 
 func categoryGroup(r *gin.RouterGroup) {
 	category := model.Category{}

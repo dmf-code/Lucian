@@ -1,15 +1,22 @@
-package routes
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"rain/internal/app/model"
+	"rain/internal/model"
 	"rain/library/captcha"
 	"rain/library/helper"
-	"rain/library/response"
+	resp "rain/library/response"
 	"rain/library/token"
 )
 
-func LoginApi(c *gin.Context) {
+func Auth(r *gin.Engine) {
+	r.POST("/login", loginAuth)
+	r.POST("/register", registerAuth)
+	r.POST("/getCaptcha", captcha.GenerateCaptchaHandler)
+	//r.POST("/verifyCaptcha", captcha.VerifyCaptchaHandler)
+}
+
+func loginAuth(c *gin.Context) {
 	auth := model.Auth{}
 	user, status := auth.Login(c)
 	newToken, _ := token.CreateToken([]byte(helper.Env("SECRET_KEY")), c.GetHeader("Origin"), user.ID, true)
@@ -22,7 +29,7 @@ func LoginApi(c *gin.Context) {
 	resp.Success(c, "ok", gin.H{"user": user, "token": newToken})
 }
 
-func RegisterApi(c *gin.Context) {
+func registerAuth(c *gin.Context) {
 	Id := c.Param("Id")
 	VerifyValue := c.Param("VerifyValue")
 	if captcha.VerifyCaptchaHandler(Id, VerifyValue) == false {
@@ -36,3 +43,4 @@ func RegisterApi(c *gin.Context) {
 	}
 	resp.Success(c, "ok", "注册成功")
 }
+

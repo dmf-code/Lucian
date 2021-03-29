@@ -1,11 +1,11 @@
-package routes
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"rain/internal/app/model"
+	"rain/internal/model"
 )
 
-func Front(r *gin.RouterGroup) {
+func FrontHandler(r *gin.RouterGroup) {
 	frontArticleGroup(r)
 	frontTutorialGroup(r)
 

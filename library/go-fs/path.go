@@ -26,8 +26,6 @@ func StoragePath() (path string) {
 		string(os.PathSeparator) +
 		"internal" +
 		string(os.PathSeparator) +
-		"app" +
-		string(os.PathSeparator) +
 		"storages" +
 		string(os.PathSeparator)
 	return

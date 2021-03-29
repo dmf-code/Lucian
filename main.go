@@ -8,8 +8,8 @@ import (
 	"log"
 	"os"
 	"rain/cmd"
-	"rain/internal/app/bootstrap"
-	"rain/internal/app/routes"
+	"rain/internal/bootstrap"
+	"rain/internal/routes"
 	"rain/library/dog"
 	"rain/library/permission"
 )

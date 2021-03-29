@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"log"
 	"os"
-	"rain/internal/app/model"
+	"rain/internal/model"
 	"rain/library/helper"
 	"strconv"
 	"strings"
